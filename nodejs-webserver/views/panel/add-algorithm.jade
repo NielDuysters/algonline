@@ -1,0 +1,82 @@
+extends panel
+
+block head2
+    link(href="/javascripts/codemirror/codemirror.css", rel="stylesheet")
+    link(href="/stylesheets/panel/add-algorithm.css", rel="stylesheet")
+    link(href="/stylesheets/panel/add-algorithm.css", rel="stylesheet")
+
+    script(src="/javascripts/codemirror/codemirror.js", defer)
+    script(src="/javascripts/codemirror/python-mode.js", defer)
+    script(src="/javascripts/panel/add-algorithm.js", defer)
+
+block panel
+    h1 Voeg algoritme toe
+
+    p Je kan hier een algoritme in een eigen Python-script schrijven en deze toevoegen aan het systeem om de prestatie van dit algoritme op te volgen.
+
+    form(method="POST", action="/panel/algorithms/add")
+        .input-wrapper
+            span
+                | ID
+                img(src="/images/panel/help.png", class="text-popup-button", data-text="Kies een kort uniek ID voor je algoritme. Bijvoorbeeld: algoritme-1.")
+            input(type="text", name="id", placeholder="simpel-algoritme")
+        
+        .input-wrapper
+            span Korte omschrijving
+            input(type="text", name="description", placeholder="Korte omschrijving...")
+        
+        .input-wrapper
+            span 
+                | Aantal USDT
+                img(src="/images/panel/help.png", class="text-popup-button", data-text="Het aantal USDT dat dit algoritme zal kunnen gebruiken.")
+            input(type="number", name="start_funds", step="0.01", placeholder="25.00", value="100.00")
+        
+        .input-wrapper
+            span 
+                | Eenmalige BTC aankoop (in USDT)
+                img(src="/images/panel/help.png", class="text-popup-button", data-text="Geef het aantal USDT in waarmee je eenmalig BTC wilt aankopen bij de creatie van het algoritme.")
+            input(type="number", name="first_btc_order", step="0.01", placeholder="5.00", value="20.00")
+        
+        .input-wrapper
+            span 
+                | Candlestick interval
+                img(src="/images/panel/help.png", class="text-popup-button", data-text="Interval van de Candlestick.")
+            select(name="interval", value="1s")
+                option(value="1s") 1s
+                option(value="1m") 1m
+                option(value="5m") 5m
+                option(value="15m") 15m
+                option(value="30m") 30m
+                option(value="1h") 1h
+                option(value="2h") 2h
+                option(value="12h") 12h
+                option(value="1d") 1d
+                option(value="3d") 3d
+        
+        .input-wrapper
+            span 
+                | Prepend data
+                img(src="/images/panel/help.png", class="text-popup-button", data-text="Start het algoritme met data van een tijd terug..")
+            select(name="prepend_data", value="0")
+                option(value="0") Geen
+                option(value="30m") 30m
+                option(value="1h") 1h
+                option(value="1d") 1d
+                option(value="1w") 1w
+                option(value="30d") 30d
+        
+        .input-wrapper
+            span 
+                | Voer uit elke sec
+                img(src="/images/panel/help.png", class="text-popup-button", data-text="Standaard wordt dit algoritme elke second uitgevoerd. Moet groter dan 5 zijn.")
+            input(type="number", name="run_every_sec", placeholder="2", value="2")
+
+        span Python code
+        textarea(id="code_input", name="code")
+
+        input(type="submit", value="Toevoegen")
+
+        if error
+            .form-error
+                span #{error}
+

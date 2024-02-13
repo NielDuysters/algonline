@@ -1,0 +1,14 @@
+#details-container {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.input-wrapper span.value {
+    font-size: 1em;
+    color: #FFFFFF;
+}
+
+.CodeMirror {
+    width: 950px;
+}

@@ -1,0 +1,57 @@
+#panel {
+    max-width: 1350px;
+}
+
+#stats {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+#stats > div {
+    background-color: #2B3139;
+    padding: 7px;
+    box-sizing: border-box;
+    border-radius: 15px;
+    display: inline-flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+#stats > div .balances {
+    display: inline-flex;
+    flex-direction: row;
+    gap: 15px;
+}
+
+#stats span.top-label {
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+#stats span.total {
+    font-weight: 400;
+}
+
+#stats span.amount {
+    font-weight: 500;
+}
+
+#history-container .table .row .cell:nth-child(1) {
+    width: 150px;
+}
+
+#history-container .table .row.buy {
+    background-color: rgba(8, 138, 8, 0.2);
+}
+
+#history-container .table .row.sell {
+    background-color: rgba(255, 0, 0, 0.2);
+}
+
+#load-more {
+    display: inline-block;
+    margin-top: 25px;
+}

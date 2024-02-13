@@ -1,0 +1,79 @@
+#container {
+    width: 100%;
+    height: 100vh;
+    display: block;
+    overflow: auto;
+}
+
+#container > div {
+    width: 50%;
+    float: left;
+    height: 100%;
+    display: flex;
+    padding: 0 50px;
+    align-items: center;
+    box-sizing: border-box;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#text {
+    font-size: 1.3em;
+}
+#text h1 {
+    color: #3686F4;
+}
+
+form,
+#welcome {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 50px 25px;
+    background-color: #2B3139;
+    border-radius: 15px;
+}
+
+form .title,
+#welcome .title {
+    font-size: 2em;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 15px;
+}
+
+form .input-wrapper {
+    padding: 0;
+    position: relative;
+}
+form .input-wrapper img {
+    position: absolute;
+    width: 18px;
+    top: 50%;
+    transform: translate(0, -50%);
+    left: 8px;
+}
+
+form .input-wrapper input[type="text"],
+form .input-wrapper input[type="password"] {
+    background-color: #181A20;
+    padding: 10px 15px;
+    padding-left: 35px;
+    border: 0;
+    width: 100%;
+    box-sizing: border-box;
+    color: #FFFFFF;
+}
+
+#form-buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+#registerbtn {
+    background-color: transparent;
+    color: #A4A4A4;
+}

@@ -1,0 +1,19 @@
+form {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+form .input-wrapper {
+    width: 100%;
+}
+
+form input[type="submit"],
+form .form-error {
+    display: inline-block;
+}
+
+.CodeMirror {
+    width: 950px;
+}

@@ -1,0 +1,55 @@
+extends panel
+
+block head2
+    link(href="/stylesheets/table.css", rel="stylesheet")
+    link(href="/stylesheets/panel/algorithms.css", rel="stylesheet")
+    script(src="/javascripts/table.js", defer)
+    script(src="/javascripts/panel/algorithms.js", defer)
+
+block panel
+    h1 Algoritmes
+
+    p Bekijk hier de prestatie van jouw trading algoritmes. Je kan ook je eigen algoritmes toevoegen door een Python script te schrijven.
+
+
+    a(class="button", href="/panel/algorithms/add")
+        span &plus; Toevoegen
+
+    if algorithms.length > 0
+        .table
+            .table-head
+                .row
+                    .cell id
+                    .cell omschrijving
+                    .cell start_funds (USDT)
+                    .cell current_funds (USDT)
+                    .cell start/stop
+                    .cell stats
+                    .cell details
+                    .cell
+                        | reset
+                        img(src="/images/panel/help.png", class="text-popup-button", data-text="Zet huidige funds als start-funds en verwijder geschiedenis.")
+                    .cell verwijder
+            .table-body
+                each a in algorithms
+                    .row(id="#{a.id}")
+                        .cell= a.id
+                        .cell
+                            img(src="/images/panel/text.png", class="text-popup-button", data-text="#{a.description}")
+                        .cell= a.start_funds
+                        .cell(class="current-funds") 0.00
+                        .cell(class="is-running")
+                            img(src="/images/panel/turn-off.png", title="Stop algoritme.")
+                            span Inactief
+                        .cell
+                            a(href="/panel/algorithms/#{a.id}/stats")
+                                img(src="/images/panel/stats.png", title="Statistieken algoritme.")
+                        .cell
+                            a(href="/panel/algorithms/#{a.id}/details")
+                                img(src="/images/panel/info.png", title="Details algoritme.")
+                        .cell
+                            img(src="/images/panel/reset.png", title="Reset algoritme.", class="reset-button", onclick="reset_algorithm(\'#{a.id}\')")
+                        .cell
+                            img(src="/images/panel/delete.png", title="Verwijder algoritme.", class="delete-button", onclick="delete_algorithm(\'#{a.id}\')")
+    else
+        p U heeft momenteel nog geen algoritmes.

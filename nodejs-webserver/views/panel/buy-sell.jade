@@ -1,0 +1,58 @@
+extends panel
+
+block head2
+    link(href="/stylesheets/panel/chart.css", rel="stylesheet")
+    link(href="/stylesheets/panel/algorithm-stats.css", rel="stylesheet")
+    link(href="/stylesheets/panel/buy-sell.css", rel="stylesheet")
+    script(src="https://cdn.canvasjs.com/canvasjs.min.js")
+    script(src="/javascripts/panel/buy-sell.js", defer)
+
+block panel
+    h1 Buy/Sell
+
+    p Koop of verkoop BTC. Let op: Dit kan invloed hebben op de beschikbare funds voor je algoritmes.
+
+    #stats
+        div
+            span.top-label BTC Price
+            .balances
+                div
+                    span.label BTC: 
+                    span.amount#btc-value 0.00 (0.00%)
+    
+    #chart-controls
+        div
+            span Interval
+            select(id="interval", value="1s")
+                option(value="1s") Live
+                option(value="1m") 1m
+                option(value="5m") 5m
+                option(value="1h") 1h
+                option(value="1d") 1d
+
+    #chart-container
+
+    
+    form(method="POST", action="/panel/buy-sell")
+        .input-wrapper
+            span Koop/Verkoop
+            select(name="action", value="buy")
+                option(value="buy") Koop
+                option(value="sell") Verkoop
+        
+        .input-wrapper
+            span Aantal BTC in USDT
+            input(type="number", name="amount", step="0.01", placeholder="5.00", value="20.00")
+
+        br
+        br
+        input(type="submit", value="Order uitvoeren")
+
+        br
+        if error
+            .form-error
+                span #{error}
+        if msg
+            .form-msg
+                span #{msg}
+

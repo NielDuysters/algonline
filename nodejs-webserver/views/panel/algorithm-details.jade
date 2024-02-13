@@ -1,0 +1,47 @@
+extends panel
+
+block head2
+    link(href="/javascripts/codemirror/codemirror.css", rel="stylesheet")
+    link(href="/stylesheets/panel/algorithm-details.css", rel="stylesheet")
+    
+    script(src="/javascripts/codemirror/codemirror.js", defer)
+    script(src="/javascripts/codemirror/python-mode.js", defer)
+    script(src="/javascripts/panel/algorithm-details.js", defer)
+
+block panel
+    h1 Algorithm details - #{algorithm.id}
+
+    p Bekijk hier de prestatie van jouw trading algoritmes. Je kan ook je eigen algoritmes toevoegen door een Python script te schrijven.
+
+
+    #details-container
+        .input-wrapper
+            span
+                | ID
+                img(src="/images/panel/help.png", class="text-popup-button", data-text="Kies een kort uniek ID voor je algoritme. Bijvoorbeeld: algoritme-1.")
+            span.value #{algorithm.id}
+        
+        .input-wrapper
+            span Korte omschrijving
+            span.value #{algorithm.description}
+        
+        .input-wrapper
+            span 
+                | Start funds USDT
+                img(src="/images/panel/help.png", class="text-popup-button", data-text="Het aantal USDT dat dit algoritme zal kunnen gebruiken.")
+            span.value #{parseFloat(algorithm.start_funds_usdt).toFixed(2)}
+        
+        .input-wrapper
+            span 
+                | Candlestick interval
+                img(src="/images/panel/help.png", class="text-popup-button", data-text="Interval van de Candlestick.")
+            span.value #{algorithm.interval}
+        
+        .input-wrapper
+            span 
+                | Voer uit elke sec
+                img(src="/images/panel/help.png", class="text-popup-button", data-text="Standaard wordt dit algoritme elke second uitgevoerd. Moet groter dan 5 zijn.")
+            span.value #{algorithm.run_every_sec}
+
+        span Python code
+        textarea(id="code_input", name="code") #{code}

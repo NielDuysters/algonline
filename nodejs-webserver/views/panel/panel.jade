@@ -1,0 +1,56 @@
+extends ../layout
+
+block head
+    link(href="/stylesheets/panel/style.css", rel="stylesheet")
+    script(src="/javascripts/api.js")
+    script(src="/javascripts/panel/panel.js", defer)
+    block head2
+
+block content
+    nav(id="panel-nav")
+        ul
+            li
+                a(href="/panel/algorithms") Algoritmes
+            li
+                a(href="/panel/buy-sell") Buy/Sell
+            li
+                a(href="/panel/settings") Instellingen
+
+        div
+            .panel-block#system-status
+                div
+                    span.top-label Status
+                    .balances
+                        div
+                            span.label Server: 
+                            span.amount#server-status -
+                        div
+                            span.label Exchange: 
+                            span.amount#exchange-status -
+
+            .panel-block#user-balance
+                div
+                    span.top-label
+                        | Start funds 
+                        span.total#start-funds-total(data-value="#{start_funds['total']}") - #{start_funds["total"].toFixed(2)} USDT
+                    .balances
+                        div
+                            span.label BTC: 
+                            span.amount#start-funds-btc(data-value="#{start_funds['btc']}") #{start_funds["btc"].toFixed(5)}
+                        div
+                            span.label USDT: 
+                            span.amount#start-funds-usdt(data-value="#{start_funds['usdt']}") #{start_funds["usdt"].toFixed(2)}
+                div
+                    span.top-label
+                        | Huidige funds - 
+                        span.total#current-balance-total
+                    .balances
+                        div
+                            span.label BTC: 
+                            span.amount#current-balance-btc 0.000000
+                        div
+                            span.label USDT: 
+                            span.amount#current-balance-usdt 0.00
+
+    #panel
+        block panel

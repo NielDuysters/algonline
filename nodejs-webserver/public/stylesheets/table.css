@@ -1,0 +1,28 @@
+.table {
+    display: block;
+    width: 100%;
+}
+.table-head {
+    width: 100%;
+    font-weight: 600;
+    color: #3686F4;
+}
+
+.row {
+    box-sizing: border-box;
+    padding: 15px 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.table-body .row:nth-child(odd) {
+    border-top: solid 2px #FFFFFF;
+    border-bottom: solid 2px #FFFFFF;
+}
+
+.cell img {
+    width: 24px;
+    cursor: pointer;
+}

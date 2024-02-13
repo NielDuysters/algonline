@@ -1,0 +1,38 @@
+
+> nodejs-backend@0.0.0 start
+> node ./bin/www
+
+Connected!
+[0mGET /panel/algorithms/add [36m302 [0m7.422 ms - 46[0m
+[0mGET / [32m200 [0m153.037 ms - 1810[0m
+[0mGET /stylesheets/style.css [36m304 [0m2.187 ms - -[0m
+[0mGET /stylesheets/index.css [36m304 [0m1.081 ms - -[0m
+[0mGET /images/logo.png [36m304 [0m0.730 ms - -[0m
+[0mPOST /login [36m302 [0m78.502 ms - 46[0m
+[0mGET / [32m200 [0m20.802 ms - 1525[0m
+[0mGET /stylesheets/style.css [36m304 [0m0.832 ms - -[0m
+[0mGET /stylesheets/index.css [36m304 [0m1.920 ms - -[0m
+[0mGET /images/logo.png [36m304 [0m1.582 ms - -[0m
+[0mGET /panel [36m304 [0m37.978 ms - -[0m
+[0mGET /javascripts/api.js [36m304 [0m2.849 ms - -[0m
+[0mGET /stylesheets/panel/style.css [36m304 [0m2.722 ms - -[0m
+[0mGET /stylesheets/table.css [36m304 [0m3.705 ms - -[0m
+[0mGET /stylesheets/panel/algorithms.css [36m304 [0m3.413 ms - -[0m
+[0mGET /javascripts/panel/panel.js [36m304 [0m3.670 ms - -[0m
+[0mGET /javascripts/table.js [36m304 [0m3.469 ms - -[0m
+[0mGET /javascripts/panel/algorithms.js [36m304 [0m3.125 ms - -[0m
+[0mGET /images/panel/turn-off.png [36m304 [0m3.031 ms - -[0m
+[0mGET /images/panel/turn-on.png [36m304 [0m2.867 ms - -[0m
+[0mGET /stylesheets/style.css [36m304 [0m0.679 ms - -[0m
+[0mGET /images/logo.png [36m304 [0m0.535 ms - -[0m
+[0mGET /panel/algorithms/add [36m304 [0m22.293 ms - -[0m
+[0mGET /stylesheets/style.css [36m304 [0m0.720 ms - -[0m
+[0mGET /stylesheets/panel/style.css [36m304 [0m0.590 ms - -[0m
+[0mGET /javascripts/api.js [36m304 [0m0.650 ms - -[0m
+[0mGET /javascripts/panel/panel.js [36m304 [0m0.672 ms - -[0m
+[0mGET /javascripts/codemirror/codemirror.css [36m304 [0m0.591 ms - -[0m
+[0mGET /stylesheets/panel/add-algorithm.css [36m304 [0m0.587 ms - -[0m
+[0mGET /javascripts/codemirror/codemirror.js [36m304 [0m0.672 ms - -[0m
+[0mGET /javascripts/codemirror/python-mode.js [36m304 [0m0.597 ms - -[0m
+[0mGET /javascripts/panel/add-algorithm.js [36m304 [0m0.514 ms - -[0m
+[0mGET /images/logo.png [36m304 [0m0.534 ms - -[0m

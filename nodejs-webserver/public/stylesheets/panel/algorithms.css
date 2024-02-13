@@ -1,0 +1,36 @@
+p {
+    margin-bottom: 25px;
+}
+
+.table {
+    max-width: 1150px;
+}
+
+.table .cell img.text-popup-button {
+    width: 18px;
+    position: relative;
+    top: 3px;
+    left: 4px;
+}
+
+.is-running {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+    font-size: 0.95em;
+}
+
+.cell:last-child,
+.cell:nth-child(2),
+.cell:nth-child(6),
+.cell:nth-child(7),
+.cell:nth-child(8)
+{ text-align: center; }
+
+.delete-button.disabled,
+.reset-button.disabled {
+    opacity: 0.8;
+    cursor: not-allowed;
+    filter: grayscale(0.9);
+}

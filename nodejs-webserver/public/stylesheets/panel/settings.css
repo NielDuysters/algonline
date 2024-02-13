@@ -1,0 +1,62 @@
+#settings-container {
+    max-width: 950px;
+}
+
+.input-wrapper {
+    display: block;
+}
+
+#reset-button {
+    color: #FFFFFF;
+    font-size: 1;
+    cursor: pointer;
+    font-weight: 500;
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+#reset-button:hover { color: #FF0000;  }
+#reset-button img {
+    width: 22px;
+}
+
+form {
+    margin-top: 25px;
+    border-radius: 15px;
+    max-width: 950px;
+    overflow: hidden;
+    padding: 10px;
+    background-color: #2B3139;
+}
+
+form span.form-title {
+    font-size: 1.3em;
+    font-weight: 600;
+    color: #3686F4;
+    margin-bottom: 15px;
+    display: block;
+}
+
+form span.warning {
+    padding: 5px;
+    background-color: #FF0000;
+    border-radius: 15px;
+    display: inline-block;
+    font-size: 0.8em;
+    color: #FFFFFF;
+    margin-left: 10px;
+}
+
+form .input-wrapper {
+    border-radius: 0;
+    padding: 0;
+    margin-bottom: 5px;
+}
+
+form .input-wrapper span {
+    font-size: 1.2em;
+    display: inline-block;
+    margin-right: 10px;
+    min-width: 125px;
+}

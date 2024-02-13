@@ -1,0 +1,17 @@
+#stats > div {
+    min-width: 225px;
+}
+
+form .input-wrapper {
+    margin-right: 15px;
+}
+
+form .input-wrapper input {
+    padding: 0;
+    padding-left: 15px;
+    font-size: 1em;
+}
+
+form select {
+    font-size: 1.1em;
+}

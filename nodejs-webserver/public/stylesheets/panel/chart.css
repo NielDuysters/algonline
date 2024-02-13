@@ -1,0 +1,21 @@
+#chart-controls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 5px;
+}
+#chart-controls > div > span.label {
+    position: relative;
+    top: 2px;
+    left: 2px;
+}
+
+#chart-controls > div > span:not(.label) {
+    margin-right: 5px;
+}
+
+#chart-container {
+    height: 400px;
+    margin-bottom: 35px;
+}
