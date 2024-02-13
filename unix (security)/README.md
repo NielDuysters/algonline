@@ -22,8 +22,18 @@ In AppArmor maken we in `/etc/apparmor.d` een profiel aan om een verbod op te le
 	deny network inet6,
 	deny network tcp,
 	deny network udp,
-	
+
+	# Denying access to files.
+	deny /home/test/* rwkx,
+	deny /home/test/rust-server/* rwkx,
+
+	# Allowing specific files.
+	allow /home/test/rust-server/tmp/shmem/* rwk,
+	allow /home/test/rust-server/tmp/sockets/* rwk,
+	allow /home/test/rust-server/trading_algos/* rwk,
+	allow /home/test/rust-server/trading_algos/test/* rwk,
 }
+
 ```
 
 Vervolgens enforcen we dit profiel `sudo aa-enforce python_executor`. Wanneer dan het volgend script uitgevoerd zou worden door PyExecutor
@@ -38,7 +48,12 @@ def func(data):
 
 Krijgen we de volgende foutmelding:
 
-![AppArmor Error](apparmor-error.png)
+![AppArmor Error 1](apparmor-error-1.png)
+
+Een file proberen toevoegen met `f = open("../test.txt", "w")` in de Python code geeft de volgende foutmelding:
+
+![AppArmor Error 2](apparmor-error-2.png)
+
 
 ## Cgroups
 De gebruiker zou ook een script kunnen uploaden dat veel van de system resources van de VPS zou verbruiken (CPU en memory) in de hoop zo de server neer te halen d.m.v aan DoS-attack.
