@@ -3,3 +3,4 @@
 *.DS_Store
 
 /rust-server/target
+/rust-server/.cargo
