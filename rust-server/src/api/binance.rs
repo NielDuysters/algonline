@@ -411,7 +411,7 @@ impl ExchangeAPI for Binance {
         
         // Send request.
         let request = http_client
-            .get(format!("{url}/avgPrice?symbol=BTCUSDT", url = self.rest_api_url))
+            .get(format!("{url}/klines?symbol=BTCUSDT&interval=1s&limit=1", url = self.rest_api_url))
             .send()
             .await;
 
@@ -423,14 +423,18 @@ impl ExchangeAPI for Binance {
         
         // Get response and make JSON.
         let response = request.text().await?;
-        let json = match serde_json::from_str::<serde_json::Value>(&*response) {
+        let json : std::vec::Vec<serde_json::Value> = match serde_json::from_str(&*response) {
             Ok(js) => js,
             Err(e) => {
                 return Err(api::Error::ExchangeAPIError(format!("{}", e)));
             }
         };
 
-        Ok(json_str_to_f64!(json["price"]))
+        if json.is_empty() {
+            return Err(api::Error::ExchangeAPIError("No klines retrieved to get btc price".into()));
+        }
+
+        Ok(json_str_to_f64!(json[0][4]))
     }
     fn keys(&self) -> String {
         self.api_key.to_string()   

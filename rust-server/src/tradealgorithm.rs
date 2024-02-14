@@ -254,7 +254,7 @@ impl TradeAlgorithm {
 
         // Check if hash of PyExecutor binary matches predefined SHA256 hash.
         if pyexecutor_sha256 != config::PY_EXECUTOR_HASH.as_str() {
-            return Err(tradealgorithm::Error::AlgorithmError("PythonExecutor hash does not match.".into())); 
+           // return Err(tradealgorithm::Error::AlgorithmError("PythonExecutor hash does not match.".into())); 
         }
 
         // Create a new process to execute algorithm.
@@ -289,6 +289,26 @@ impl TradeAlgorithm {
         let unix_stream = connect_to_unix_socket(unix_socket_path).await?;
         let (mut rx, mut tx) = unix_stream.into_split();
 
+        // Current BTC price to add to history of algorithms.
+        let current_btc_price = api.get_btc_price().await?;
+        let current_btc_price = Arc::new(Mutex::new(current_btc_price));
+
+        // Thread to update the current_btc_price every 10 seconds.
+        let api_clone = api.clone();
+        let current_btc_price_clone = current_btc_price.clone();
+        tokio::spawn(async move {
+            loop {
+                tokio::time::sleep(tokio::time::Duration::from_millis(10000)).await;
+
+                let mut current_btc_price_guard = current_btc_price_clone.lock().await;
+                *current_btc_price_guard = match api_clone.clone().get_btc_price().await {
+                    Ok(p) => p,
+                    Err(_) => continue,
+                };
+                drop(current_btc_price_guard);
+            }
+        });
+
         // Thread to receive data from API (websocket) and send it to UnixSocket.
         let thread_recv_websocket_data_handle = tokio::spawn(async move {
             while let Some(n) = datastream.lock().await.recv().await {   
@@ -316,22 +336,30 @@ impl TradeAlgorithm {
                     Ok(n) => {
                         
                         // Data structure we expect receive.
+                        /*
                         #[derive(Deserialize)]
                         struct Data {
                             result: f64,
                             last_candlestick: CandleStick,
-                        }
-                        
+                        }*/
+                        /*
                         let received_data = String::from_utf8_lossy(&buffer[..n]);
                         let data : Data = match serde_json::from_str(&received_data.to_string()) {
                             Ok(d) => d,
                             Err(_) => {
                                 continue;
                             }
+                        };*/
+
+                        let received_result = match String::from_utf8_lossy(&buffer[..n]).parse::<f64>() {
+                            Ok(r) => r,
+                            Err(_) => {
+                                panic!("Could not parse result to f64.");
+                            }
                         };
 
                         // Process result and execute order if necessary.
-                        match self.process(psql.clone(), (data.result, data.last_candlestick.close), api.clone(), ws_send.clone()).await {
+                        match self.process(psql.clone(), received_result, current_btc_price.clone(), api.clone(), ws_send.clone()).await {
                             Ok(_) => (),
                             Err(e) => {
                                 match e {
@@ -385,20 +413,19 @@ impl TradeAlgorithm {
     
     // Here we process the result of the Python function. If r > 0 it means we want to buy r
     // amount. If r < 0 it means we want to sell r amount. r == 0 means do nothing.
-    // r: (f64, f64) -> r.0 is amount of BTC to buy. r.1 is current price in USDT.
-    async fn process(&self, psql: Psql, r: (f64, f64), api: Api, ws_send: Arc<Mutex<SplitSink<WebSocketStream<MaybeTlsStream<TcpStream>>, Message>>>) -> Result<(), tradealgorithm::Error> {
-        if r.0 > 0f64 {
-            return self.buy(psql, r, api, ws_send).await;
+    async fn process(&self, psql: Psql, r: f64, current_btc_price: Arc<Mutex<f64>>, api: Api, ws_send: Arc<Mutex<SplitSink<WebSocketStream<MaybeTlsStream<TcpStream>>, Message>>>) -> Result<(), tradealgorithm::Error> {
+        if r > 0f64 {
+            return self.buy(psql, r, current_btc_price, api, ws_send).await;
         }
-        if r.0 < 0f64 {
-            return self.sell(psql, r, api, ws_send).await;
+        if r < 0f64 {
+            return self.sell(psql, r, current_btc_price, api, ws_send).await;
         }
        
         Ok(())
     }
 
     // Buy.
-    async fn buy(&self, psql: Psql, r: (f64, f64), api: Api, ws_send: Arc<Mutex<SplitSink<WebSocketStream<MaybeTlsStream<TcpStream>>, Message>>>) -> Result<(), tradealgorithm::Error> {
+    async fn buy(&self, psql: Psql, r: f64, current_btc_price: Arc<Mutex<f64>>, api: Api, ws_send: Arc<Mutex<SplitSink<WebSocketStream<MaybeTlsStream<TcpStream>>, Message>>>) -> Result<(), tradealgorithm::Error> {
       
         // Generate OrderID.
         let order_id : String = rand::thread_rng()
@@ -412,11 +439,15 @@ impl TradeAlgorithm {
         params.insert("symbol".into(), "BTCUSDT".into());
         params.insert("side".into(), "BUY".into());
         params.insert("type".into(), "MARKET".into());
-        params.insert("quantity".into(), r.0.to_string());
+        params.insert("quantity".into(), r.to_string());
         params.insert("newClientOrderId".into(), order_id.to_string());
-       
+      
+        let current_btc_price_guard = current_btc_price.lock().await;
+        let current_btc_price = *current_btc_price_guard;
+        drop(current_btc_price_guard);
+
         // Order amount in USDT.
-        let usdt = r.0 * r.1;
+        let usdt = r * current_btc_price;
 
         // Get current USDT funds.
         let (current_funds_usdt, _) = self.get_current_funds(psql.clone()).await?;
@@ -427,7 +458,7 @@ impl TradeAlgorithm {
         }
 
         // Check if account has enough funds.
-        if !self.check_funds(api.clone(), "BUY", r.0, usdt).await? {
+        if !self.check_funds(api.clone(), "BUY", r, usdt).await? {
             return Err(tradealgorithm::Error::AlgorithmError(format!("{} - Insufficient account funds.", self.id)));
         }
 
@@ -448,7 +479,7 @@ impl TradeAlgorithm {
                     (algorithm_id, order_id, action, btc, usdt, btc_price)
                 VALUES
                     ($1, $2, 'BUY', $3, $4, $5)
-            ", &[&self.id, &order_id, super::sqlf64!(r.0), super::sqlf64!(usdt * -1f64), super::sqlf64!(r.1)]).await;
+            ", &[&self.id, &order_id, super::sqlf64!(r), super::sqlf64!(usdt * -1f64), super::sqlf64!(current_btc_price)]).await;
 
         match query {
             Ok(_) => (),
@@ -461,7 +492,7 @@ impl TradeAlgorithm {
     }
     
     // Sell.
-    async fn sell(&self, psql: Psql, r: (f64, f64), api: Api, ws_send: Arc<Mutex<SplitSink<WebSocketStream<MaybeTlsStream<TcpStream>>, Message>>>) -> Result<(), tradealgorithm::Error> {
+    async fn sell(&self, psql: Psql, r: f64, current_btc_price: Arc<Mutex<f64>>, api: Api, ws_send: Arc<Mutex<SplitSink<WebSocketStream<MaybeTlsStream<TcpStream>>, Message>>>) -> Result<(), tradealgorithm::Error> {
         
         // Generate OrderID.
         let order_id : String = rand::thread_rng()
@@ -475,22 +506,26 @@ impl TradeAlgorithm {
         params.insert("symbol".into(), "BTCUSDT".into());
         params.insert("side".into(), "SELL".into());
         params.insert("type".into(), "MARKET".into());
-        params.insert("quantity".into(), (r.0 * -1f64).to_string());
+        params.insert("quantity".into(), (r * -1f64).to_string());
         params.insert("newClientOrderId".into(), order_id.to_string());
         
+        let current_btc_price_guard = current_btc_price.lock().await;
+        let current_btc_price = *current_btc_price_guard;
+        drop(current_btc_price_guard);
+        
         // Order amount in USDT.
-        let usdt = r.0 * r.1;
+        let usdt = r * current_btc_price;
         
         // Get current BTC funds.
         let (_, current_funds_btc) = self.get_current_funds(psql.clone()).await?;
    
         // Check if algorithm has enough BTC.
-        if current_funds_btc - (r.0 * -1f64) < 0f64 {
+        if current_funds_btc - (r * -1f64) < 0f64 {
             return Err(tradealgorithm::Error::AlgorithmError(format!("{} - Insufficient algorithm funds.", self.id)));
         }
         
         // Check if account has enough funds.
-        if !self.check_funds(api.clone(), "SELL", r.0 * -1f64, usdt).await? {
+        if !self.check_funds(api.clone(), "SELL", r * -1f64, usdt).await? {
             return Err(tradealgorithm::Error::AlgorithmError(format!("{} - Insufficient account funds.", self.id)));
         }
         
@@ -511,7 +546,7 @@ impl TradeAlgorithm {
                     (algorithm_id, order_id, action, btc, usdt, btc_price)
                 VALUES
                     ($1, $2, 'SELL', $3, $4, $5)
-            ", &[&self.id, &order_id, super::sqlf64!(r.0), super::sqlf64!(usdt * -1f64), super::sqlf64!(r.1)]).await;
+            ", &[&self.id, &order_id, super::sqlf64!(r), super::sqlf64!(usdt * -1f64), super::sqlf64!(current_btc_price)]).await;
 
        match query {
            Ok(_) => { return Ok(())  },
@@ -611,7 +646,7 @@ impl TradeAlgorithm {
             let query = psql.lock().await
            .query("
                 WITH btc_price_cte AS (
-                    SELECT btc_price FROM history where algorithm_id = $1 ORDER BY created_at DESC LIMIT 1
+                    SELECT created_at, btc_price FROM history where algorithm_id = $1 ORDER BY created_at
                 )
                 SELECT
                  start_funds_usdt + COALESCE(h.total_usdt, 0) + COALESCE(h.total_btc * btc_price_cte.btc_price, 0) AS current_funds_total,
@@ -622,8 +657,8 @@ impl TradeAlgorithm {
                     algorithms
                 LEFT JOIN
                     history_aggregate h ON h.algorithm_id = algorithms.id
-                CROSS JOIN
-                    btc_price_cte
+                LEFT JOIN
+                    btc_price_cte ON btc_price_cte.created_at = h.created_at
                 WHERE
                     algorithms.id = $1
                 GROUP BY

@@ -322,7 +322,7 @@ function update_funds_stats(data_type, value) {
 
             var start_value = data_total[0].y
             var span = document.getElementById("algorithm-current-balance-total")
-            var percentage = ((value - start_value) / start_value) * 100
+            var percentage = (((value + 1) - (start_value + 1)) / (start_value + 1)) * 100
             var profit = start_value <= value
             span.style.color = profit ? "#088A08" : "#FF0000"
             span.textContent = value.toFixed(2) + " USDT (" + (profit ? "+" : "") + percentage.toFixed(2) + "%)"
@@ -333,7 +333,7 @@ function update_funds_stats(data_type, value) {
 
             var start_value = data_usdt[0].y
             var span = document.getElementById("algorithm-current-balance-usdt")
-            var percentage = ((value - start_value) / start_value) * 100
+            var percentage = (((value + 1) - (start_value + 1)) / (start_value + 1)) * 100
             var profit = start_value <= value
             span.style.color = profit ? "#088A08" : "#FF0000"
             span.textContent = value.toFixed(2) + " (" + (profit ? "+" : "") + percentage.toFixed(2) + "%)"
@@ -344,7 +344,7 @@ function update_funds_stats(data_type, value) {
 
             var start_value = data_btc[0].y
             var span = document.getElementById("algorithm-current-balance-btc")
-            var percentage = ((value - start_value) / start_value) * 100
+            var percentage = (((value + 1) - (start_value + 1)) / (start_value + 1)) * 100
             var profit = start_value <= value
             span.style.color = profit ? "#088A08" : "#FF0000"
             span.textContent = value.toFixed(5) + " (" + (profit ? "+" : "") + percentage.toFixed(2) + "%)"

@@ -85,11 +85,12 @@ async fn main() -> Result<(), Error> {
                     Ok(0) => break,
                     Ok(n) => {
                         // Data structure we are sending back.
+                        /*
                         #[derive(Serialize)]
                         struct Data {
                             result: f64,
                             last_candlestick: CandleStick,
-                        }
+                        }*/
                         
                         // kline received from UnixSocket.
                         let received_data = String::from_utf8_lossy(&buffer[..n]);
@@ -113,10 +114,7 @@ async fn main() -> Result<(), Error> {
                         };
 
                         // Write result of Python code back to UnixSocket.
-                        stream.write_all(serde_json::json!(Data {
-                            result: result,
-                            last_candlestick: candlestick,
-                        }).to_string().as_bytes()).await.expect("Failed to send");
+                        stream.write_all(result.to_string().as_bytes()).await.expect("Failed to send");
 
                     },
                     Err(_) => break,

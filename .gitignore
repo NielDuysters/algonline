@@ -5,3 +5,7 @@
 
 /rust-server/target
 /rust-server/.cargo
+/rust-server/trading_algos/*
+/rust-server/tmp
+
+/nodejs-webserver/node_modules
