@@ -1,18 +1,17 @@
 # Unix
 
-Het project is gedeployed op een Linux Debian VPS. Er zijn standaard zaken geconfigureerd zoals Nginx als proxy manager om de NodeJS webserver toegankelijk te maken, en configuratie voor een SSL-certificaat.
+This project is deployed on a Debian GNU/Linux VPS. I will not explain the basic configuration of Nginx as reverse proxy or managing the SSL-certificate.
 
-Ik ga echter enkel dieper ingaan op de configuratie die gebruikt is voor een bepaald probleem in het project.
+I will explain the configuration I have used to solve a potential security threat.
 
-**Probleem:** De gebruiker can zelf Python scripts uploaden die trading algoritmes bevatten. Deze code zou enkel in staat moeten zijn om wiskundige operaties uit te voeren en zou nooit
-onbedoeld bestanden moeten kunnen lezen of wijzigen en zou ook geen toegang moeten hebben tot het netwerk.
+**Security threat:** The user is able to upload custom Python scripts which will be executed on our server. This contains the risk that a user with mal intent uploads a vicious script trying to read/modify files on our server or upload a script using an unnormal amount of system resources trying to take down the server with a DoS-attack.
 
-Op code-level is dit deels opgelost door te controleren of de code keywords bevatten die geblacklist zijn, zoals 'import', 'os', 'request',... Echter willen we uiteraard ook op OS-level wat beveiliging implementeren.
+On code-level we partly migitated this risk by filtering the uploaded code on blacklisted keyworks like "import", "eval", "os", "file",... The code should only be able to do calculations on the provided data and should not have access to the network or unpermitted files on the server. Besides blacklisting on code-level we of course also want to implement security protocol on OS-level.
 
-Oplossing: We gebruiken cgroups en AppArmor voor de PyExecutor.
+**Solution:** We use cgroups and AppArmor for the PyExecutor. Note that all the Python code is executed in a separate binary/process then our Rust-server. 
 
 ## AppArmor
-In AppArmor maken we in `/etc/apparmor.d` een profiel aan om een verbod op te leggen op alle netwerken en een verbod op toegang tot alle bestanden behalve die toegestaan zijn.
+For AppArmor we make a profile in `/etc/apparmor.d` to restrict access to the network and all files except those who are required.
 ```
 #include <tunables/global>
 
@@ -36,7 +35,7 @@ In AppArmor maken we in `/etc/apparmor.d` een profiel aan om een verbod op te le
 
 ```
 
-Vervolgens enforcen we dit profiel `sudo aa-enforce python_executor`. Wanneer dan het volgend script uitgevoerd zou worden door PyExecutor
+Next we enforce this profile: `sudo aa-enforce python_executor`. When e.g the following Python-script is uploaded with an attempt to execute it,
 ```
 import requests
 
@@ -46,35 +45,35 @@ def func(data):
     return 0
 ```
 
-Krijgen we de volgende foutmelding:
+we get the following error:
 
 ![AppArmor Error 1](apparmor-error-1.png)
 
-Een file proberen toevoegen met `f = open("../test.txt", "w")` in de Python code geeft de volgende foutmelding:
+Trying to add a file with `f = open("../test.txt", "w")` in the Python-code yields the following error:
 
 ![AppArmor Error 2](apparmor-error-2.png)
 
 
 ## Cgroups
-De gebruiker zou ook een script kunnen uploaden dat veel van de system resources van de VPS zou verbruiken (CPU en memory) in de hoop zo de server neer te halen d.m.v aan DoS-attack.
-In Linux kunnen we control groups definieren die verschillende processen in een cgroup plaatst met regels omtrent het maximaal aantal resources dat dit process mag gebruiken.
+The user with malicious intents could also try to make a script which on purpose uses a lot of the system resources on our VPS in an attempt to take the server down with a DoS-attack. We can migitate this risk by using control groups.
+We can place the PID's of all the processes initiated by PyExecutor in a control group which enforces limits on the maximum amount of system resources these processes can use.
 
-Eerst creeeren we een cgroup:
+To start we create a cgroup:
 ```
 sudo cgcreate -g cpu,memory:pyexecutor
 sudo cgset -r memory.max=400000 pyexecutor
 sudo cgset -r cpu.max=75000 pyexecutor
 ```
 
-We hebben een cgroup gecreerd die een max bandwith limit van 75000 heeft voor de CPU, en max 0.4mb voor geheugen.
+We have created a cgroup with a max bandwith limit of 75000 for the CPU and a max if 0.4mb for memory.
 
-Vervolgens creeer ik volgend bestend `/etc/cgrules.conf`:
+Next we create the following config-file `/etc/cgrules.conf`:
 ```
 *:python-executor cpu,memory pyexecutor
 ```
 
-Met het volgend commando `watch -n 5 'sudo cgclassify $(pgrep -x python-executor | tr "\n" " ")'` worden alle PID's van de Rust-binary python-executor om de 5 seconden automatisch aan de juiste cgroup toegevoegd.
+With this command `watch -n 5 'sudo cgclassify $(pgrep -x python-executor | tr "\n" " ")'` all the PID's of the Rust-binary PyExecutor are automatically placed in the correct cgroup every 5 seconds.
 
-Als we dan even het memory-gebruik van de python-executor processen opvolgen met het `top`-commando zien we inderdaad dat deze processen worden afgesloten zodra ze de limiet bereikt hebben.
+When monitoring the memory usage of all the processes of PyExecutor using the `top`-command we can see that the process is indeed killed when it exceeds the configured limit.
 
 ![cgroup-top](cgroup-top.png)
