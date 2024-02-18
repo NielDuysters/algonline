@@ -1,3 +1,8 @@
+#
+# This algorithm checks how many datapoints are increasing or decreasing consecutively starting by counting from the last datapoint.
+# If the count exceeds a threshold we generate the order-signal.
+#
+
 # Count how many consecutive days BTCUSDT increased or decreases.
 def count(data, threshold):
     count_inc = 0
