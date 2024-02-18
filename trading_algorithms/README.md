@@ -42,3 +42,10 @@ This result is compared against the average price of the last datapoint to retur
 The algorithm in [concur.py](concur.py) is pretty intuitive. We basically define a window of the datapoints to consider in the dataset and reverse this list, next we start at the last datapoint (last in time, first in reversed dataset) and check if the price of the asset increases or decreases concurrently. 
 
 We have defined a threshold indicating how many concurrent increases or decreases are required to generate the order-signal. The threshold to sell is half of the threshold to buy, this to escape bearish markets quicky.
+
+
+## Results
+
+These algorithm seem to yield a positive result. But of course this is not an indication of their success due to the short time span they were active.
+
+![Algorithm results](results.png)
