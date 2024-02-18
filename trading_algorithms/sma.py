@@ -1,3 +1,7 @@
+#
+# Algorithm using Simple Moving Average.
+#
+
 # Calculate to Simple Moving Average.
 def sma(close_prices):
   return sum(close_prices) / len(close_prices)
