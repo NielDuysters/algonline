@@ -1,3 +1,7 @@
+#
+# Algorithm using the Mean Reversion Strategy.
+#
+
 # Calculate average price of datapoint.
 def avg_price(dp):
     return (dp.h + dp.l + dp.c) / 3
