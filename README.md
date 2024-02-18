@@ -19,3 +19,22 @@ The code base exists mainly out of Rust, a big part is also written in NodeJS. B
 - ...
 
 For each section of the project a folder exists in this repository where I explain the details.
+
+## Screenshots
+Algorithm overview
+![Algorithm overview](screenshots/algorithm-overview.png)
+
+Algorithm statistics
+![Algorithm stats](screenshots/algorithm-stats.png)
+
+Algorithm details
+![Algorithm details](screenshots/algorithm-details.png)
+
+Add algorithm
+![Add algorithm](screenshots/add-algorithm.png)
+
+Buy/sell BTC manually
+![BTC order](screenshots/order-btc.png)
+
+Settings
+![Settings](screenshots/settings.png)
