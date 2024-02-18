@@ -1,9 +1,11 @@
 # PostgreSQL
 
-Voor dit project is PostgreSQL gebruikt als database-engine. Het database-gebeuren van dit project is vrij basaal. Ik zal echter enkele queries en functies toelichten.
+PostgreSQL is the database-engine of choice for this project. No advanced things are used in the database-architecture and the database-part of the project is pretty basic.
+
+I will go into more detail about how I optimized the way chart-data for a trading algorithm is queried.
 
 ## History-table
-Wanneer een algoritme een order uitvoerd wordt de data van dit order bijgehouden in een tabel history.
+When an algorithm executes an order the data of this order is stored in the table `history`.
 ```
                                   Table "public.history"
     Column    |            Type             | Collation | Nullable |         Default
@@ -24,13 +26,12 @@ Triggers:
     refresh_history_view AFTER INSERT OR DELETE OR UPDATE OR TRUNCATE ON history FOR EACH STATEMENT EXECUTE FUNCTION refresh_history_view()
 ```
 
-Deze info is nodig om o.a de chart van een algoritme te tonen om zo de prijsevolutie van zowel BTC, USDT en het totaal van het portfolio (BTC + USDT) weer te geven over tijd.
+This data is necessary to retrieve info about the algorithm. I.e to retrieve a chart showcasing the evolution of the amount of BTC and USDT an algorithm has over time, and as well the total of it's portfolio (total USDT + total BTC in USDT while keeping the volatility of BTC in account).
 
-**Hier kwam een probleem bij kijken:** Als ik de prijzen van dit algoritme wil weergeven voor timestamp x dan zou ik eerst alle kollomen moeten optellen `SELECT SUM(btc), SUM(usdt) FROM history WHERE algorithm_id = $1 AND created_at <= x`.
-Dit geeft de USDT en BTC voor een algoritme voor timestamp x. Voor het totaal van het portfolio moet ik echter ook het aantal BTC voor timestamp x vermemigvuldigen met `btc_price` wat de prijs voor 1 BTC bevat in USDT voor op het tijdstip van de order.
-`SELECT SUM(btc), SUM(usdt), SUM(btc) * btc_price FROM history WHERE algorithm_id = $1 AND created_at <= x` (pseudo).
+**This came with an impediment:** When I want to retrieve the chart to display the evolution of the amount of BTC and USDT an algorithm holds I'd have to to sum the total of purchased/sold BTC and USDT for each timestamp. And multiple the amount of BTC with the price of BTC at that timestamp. This is an instensive task causing extremely slow loading times for the chart.
 
-Als ik dan een chart wil weergeven zou ik deze query voor elke minuut van start_timestamp > timestamp x moeten uitvoeren. Dat resulteert in het zeer traag laden van de chart. Daarom heb ik een view gemaakt:
+To solve this I created the following view (`history_aggregate`):
+
 ```
     Column    |            Type             | Collation | Nullable | Default | Storage  | Compression | Stats target | Description
 --------------+-----------------------------+-----------+----------+---------+----------+-------------+--------------+-------------
@@ -47,7 +48,8 @@ View definition:
   GROUP BY algorithm_id, btc, btc_price, usdt, created_at;
 ```
 
-Deze view bevat voor elke algoritme het `total_usdt` en `total_btc` voor elke timestamp. Op de history-table is er een trigger `refresh_history_view` toegevoegd die na elke insert de volgende procedure uitvoert om de view te refreshen:
+This view contains the total of BTC and USDT an algorithm has at each specific timestamp. By the trigger bound to the `history` table we automatically update this view each time a row is added/removed/updated in the `history` table. This way we don't have to calculate these values when the user wants to load a chart.
+
 ```
 CREATE OR REPLACE FUNCTION public.refresh_history_view()
  RETURNS trigger
@@ -58,11 +60,10 @@ begin
     return null;
 end $function$
 ```
+The Rust-server inserts a row into the `history` table for all algorithms containing the price of BTC at that time. This way, even when an algorithm doesn't have a record of an order at that time, we are able to calculate the value of the portfolio by utilising this data.
 
-De Rust-server voegt elke minuut een rij toe die enkel de btc_price voor dat tijdstip bevat zodat alle algoritmes per minuut kennis hebben van de btc_price ookal is er geen order gebeurt die minuut. Op deze kunnen we per minuut een chart genereren
-voor alle algoritmes die de usdt, btc, en total weergeven.
+Finally, I can retrieve the data to generate a chart in Rust with this query:
 
-Vervolgens voer ik in Rust de volgende query uit om de chart op te vragen:
 ```
 WITH btc_price_cte AS (
     SELECT created_at, btc_price FROM history where algorithm_id = $1 ORDER BY created_at
@@ -84,11 +85,11 @@ GROUP BY
     algorithm_id, start_funds_usdt, h.total_usdt, h.total_btc, btc_price_cte.btc_price, h.created_at
 ORDER BY h.created_at;
 ```
+By utilising a common table expression I first retrieve all the prices of BTC for each timestamp. Next the view `history_aggregate` is queried so we have the amount of BTC and USDT at each timestamp, with the BTC price from the CTE we can easily calculate all the values required for the chart.
 
-Met een common table expression vraag ik eerst alle btc prijzen op met de timestamp. De history_aggregate view bevat per timestamp al het totaal van de btc en usdt per tijdstip aangezien deze view telkens refreshed wanneer een rij in history wordt toegevoegd.
-Op deze manier kan er veel sneller een overzicht gegeven worden van de prestatie van het algoritme en de prijsevolutie per minuut rekening houdend met de volatiliteit van de btc prijs.
+Because the view `history_aggregate` is updated at least every minute doing most of the calculations already we can load the chart a lot faster then if we would do these calculations each time the user requests the chart.
 
-De history tabel heeft ook een procedure `process_history_record()`.
+The table `history` also has the following procedure: `process_history_record()`.
 ```
 CREATE OR REPLACE FUNCTION public.process_history_record()
  RETURNS trigger
@@ -101,7 +102,7 @@ AS $function$
 $function$
 ```
 
-Deze stuurt een postgres notificatie uit naar deze listener in Rust:
+This procedure send a Postgres-notification to a listener in Rust:
 ```
 match client
     .query(
@@ -116,4 +117,4 @@ match client
     }
 ```
 
-De chart en history van een algorithme wordt op de pagina van dat algoritme live geupdate d.m.v een websocket. Wanneer de listener een notificatie die de data van de rij bevat binnenkrijgt wordt dit doorgestuurd aan de websocket stream zodat de gebruiker live het algoritme kan opvolgen zonder te moeten herladen.
+The chart and order-history of an algorithm is updated live on the page where the user views the statistics of a specific algorithm. When the listener receives a new notification we push the data it contains to the client using a websocket. This way the user always has the most recent data without a need to refresh the page.
