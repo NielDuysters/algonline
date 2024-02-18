@@ -15,7 +15,7 @@ The code base exists mainly out of Rust, a big part is also written in NodeJS. B
 - Multi-threading.
 - Asynchronous programming.
 - IPC-communication (shmem + unix sockets).
-- Use of API's (BinanceAPI, signed requests, REST, Websocket,...).
+- Use of APIs (BinanceAPI, signed requests, REST, Websocket,...).
 - ...
 
 For each section of the project a folder exists in this repository where I explain the details.
