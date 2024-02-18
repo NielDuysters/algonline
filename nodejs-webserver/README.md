@@ -1,13 +1,12 @@
 # NodeJS webserver
 
-Het web-paneel zelf is gemaakt in NodeJS. Deze server communiceert zelf niet met de Binance API. Wat deze wel doet is het inloggen en registreren van gebruikers. Ook alle requests die de gebruiker doet om bijvoorbeeld een
-algoritme toe te voegen of te starten wordt door deze server geforward naar de Rust-server waar onze eigen API draait.
+The web-panel is made in NodeJS. It does not contain logic to manipulate data or algorithms. It only handles the requests made by the user and acts as intermediary between the client and the Rust-server.
 
-Doordat de gebruiker is ingelogd kan deze server de session-token als parameter of in de header toevoegen aan de requests naar de Rust-server om zo de juiste Binance API-keys gelinkt aan de ingelogde gebruiker op te halen.
+After the user is logged in NodeJS can authenticate the requests to the Rust-server by adding the session-token of the user in the header or as parameter.
 
-**Gebruikte vaardigheden (o.a):**
+**Used skills (i.a):**
 - Webdevelopment.
-- Asynchronous programmeren.
+- Asynchronous programming.
 - HTTP Requests.
 - Websockets.
 - Database queries.
