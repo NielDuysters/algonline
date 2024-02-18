@@ -1,26 +1,26 @@
 # Rust-server
-Dit is de core van het project. De Rust-server bevat een low-level HTTP server, websocket server, api, en logica om de algoritmes uit te voeren.
+This compoment is the core of our project containing most of the logic.
 
-**Vaardigeden gebruikt (o.a):**
+**Used skills (i.a):**
 - Low-level HTTP requests.
 - Websockets.
 - Streams.
-- IPC-communicatie.
+- IPC-communication (shmem + unix sockets).
 - Multi-threading.
 - Asynchronous programming.
 - API calls.
+- Signed API calls.
 - Database connections.
 - Session management.
 - ...
 
-Deze Rust-server bevat een zelfgemaakte HTTP-server, normaal zou hiervoor uiteraard een framework voor gebruikt worden maar op deze manier kon ik mijn begrip omtrent HTTP aantonen.
-Er wordt een TcpListener gebruikt, wanneer deze een stream binnenkrijgt interpreteren we deze stream als string en parsen het als een Http-object. We halen de headers, parameters en body manueel uit de stream.
+This server contains a 'low-level' HTTP-server (made without any framework). A TcpListener is bound to a port, when the stream receives a request we manually serialize the incoming string into a Http-object. Among other things this component also contains a websocket-server, API, interface to communicate with the Binance API, logic to execute algorithms and retrieve performance data,...
 
-De programmeur kan vervolgens zelf routes configureren. De Http-server kijkt in de path van het Http-object of er een route matched met de gevraagde path, als dat het geval is wordt die route uitgevoerd die vervolgens een HttpResponse returned dat we
-terugschrijven naar de stream.
+The programmer can configures his own routes in the HTTP-server. When the incoming request is serialized to a Http-object we check if a path exists for the requested endpoint in the Http-object. If so, we execute the function configured for the requested path and write the response back to the stream.
 
-Daarnaast is er ook een aparte TcpListener voor websockets. De gebruiker kan een message sturen naar deze websocket. Dit request bevat een action-parameter. De websocket functie gelinkt aan deze action wordt uitgevoerd en de stream blijft open. Vervolgens kunnen we
-data heen en weer over de stream sturen.
+For the websockets a separate TcpListener is used. The websocket-endpoints are used to feed data to the client with as little latency as possible and without the need to refresh a page.
 
-De Rust-server bevat ook alle logica om algoritmes te starten en te stoppen. Wanneer een algoritme wordt gestart wordt de configuratie van dit algoritme opgevraagd uit de databank. Vervolgens openen we een websocket-stream naar de Binance API om een stream van candlesticks
-te ontvangen. Een apart process van de PyExecutor die de Python-code uitvoert d.m.v PyO3 ontvangt deze data door een unix socket. De PyExecutor stuurt het resultaat van de Python code terug en de Rust-server doet al dan niet een order naar de Binance API.
+Finally this also contains all the logic to start and execute a trading algorithm and process the result. When an algorithm is started a websocket stream to the Binance API is initiated to retrieve candlesticks. This data is fed to the trading algorithm using Unix Sockets. In PyExecutor the Python code is executed and the returned result is sent back over the Unix Socket so it can be processed by the Rust-server.
+
+## PyExecutor
+PyExecutor is a separate binary responsible for executing the Python code. The reason it is a separate binary is so we are able to isolate this process on OS-level to secure the execution of arbitrary code. The Rust-server and PyExecutor communicate with each other using IPC (shared memory and Unix sockets).
