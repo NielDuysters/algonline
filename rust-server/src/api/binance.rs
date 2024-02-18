@@ -368,7 +368,7 @@ impl ExchangeAPI for Binance {
     // interval.
     // The klines are send to Sender 's'.
     async fn ws_kline(&self, s: Arc<Mutex<mpsc::Sender<CandleStick>>>, interval: String) -> Result<(), api::Error> {
-        // Automatically try to reconnect after 5 seconds if connection drops.
+        // Automatically ury to reconnect after 5 seconds if connection drops.
         loop {
             let url = url::Url::parse(&*format!("{url}/btcusdt@kline_{interval}", url = &*self.ws_stream_url, interval = interval))?;
             
@@ -397,7 +397,9 @@ impl ExchangeAPI for Binance {
                             return Err(api::Error::ExchangeAPIError(format!("{}", e)));
                         }
                     },
-                    Err(_) => continue,
+                    Err(_) => {
+                        continue;
+                    },
                 }
             }
 

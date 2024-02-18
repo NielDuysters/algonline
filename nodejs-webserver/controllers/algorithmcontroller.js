@@ -9,7 +9,7 @@ const axios = require('axios')
 // Check if user is authenticated.
 const check_auth = (req, res, next) => {
     if (!req.session.user) {
-        return res.send(401)
+        return res.sendStatus(401)
     }
 
     next()
@@ -31,7 +31,7 @@ exports.retrieve = [check_auth, asyncHandler(async (req, res, next) => {
             return res.status(200).send(response.data)
         }
 
-        return res.send(response.status)
+        return res.sendStatus(response.status)
     } catch(err) {
         res.status(500).send("Onbekende fout opgetreden.")
     }
@@ -53,9 +53,9 @@ exports.code = [check_auth, asyncHandler(async (req, res, next) => {
             return res.status(200).send(response.data)
         }
 
-        return res.send(response.status)
+        return res.sendStatus(response.status)
     } catch(err) {
-        res.status(500).send("Onbekende fout opgetreden.")
+        res.status(500).send("Unknown error occurred.")
     }
 })]
 
@@ -72,7 +72,7 @@ exports.toggle_running = [check_auth, asyncHandler(async (req, res, next) => {
                 }
             })
 
-        res.send(response.status)
+        res.sendStatus(response.status)
     } catch (err) {
         res.status(response.status).send(err.message)
     }
@@ -90,9 +90,9 @@ exports.remove = [check_auth, asyncHandler(async (req, res, next) => {
                 }
             })
 
-        res.send(response.status)
+        res.sendStatus(response.status)
     } catch(err) {
-        res.status(500).send("Algoritme kon niet verwijderd worden.")
+        res.status(500).send("Algorithm could not be removed.")
     }
 })]
 
@@ -109,10 +109,9 @@ exports.reset = [check_auth, asyncHandler(async (req, res, next) => {
                 }
             })
 
-        res.send(response.status)
+        res.sendStatus(response.status)
     } catch(err) {
-        console.log(err)
-        res.status(500).send("Algoritme kon niet gereset worden.")
+        res.status(500).send("Algorithm could not be resetted.")
     }
 })]
 
@@ -131,12 +130,12 @@ exports.chart = [check_auth, asyncHandler(async (req, res, next) => {
         if (response.status == 200) {
             return res.send(response.data)
         } else {
-            return res.send(response.status)
+            return res.sendStatus(response.status)
         }
     } catch(err) {
         console.log("error")
         console.log(err)
-        res.status(500).send("Chart van algoritme kon niet opgehaald worden.")
+        res.status(500).send("Couldn't retrieve chart of this algorithm.")
     }
 })]
 
@@ -155,10 +154,10 @@ exports.history = [check_auth, asyncHandler(async (req, res, next) => {
         if (response.status == 200) {
             return res.send(response.data)
         } else {
-            return res.send(response.status)
+            return res.sendStatus(response.status)
         }
     } catch(err) {
-        res.status(500).send("History van algoritme kon niet opgehaald worden.")
+        res.status(500).send("Couldn't retrieve history of this algorithm.")
     }
 })]
 

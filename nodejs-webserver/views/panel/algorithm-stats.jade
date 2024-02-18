@@ -11,7 +11,7 @@ block head2
 block panel
     h1 Algorithm stats - #{id}
 
-    p Bekijk hier de prestatie van jouw trading algoritmes. Je kan ook je eigen algoritmes toevoegen door een Python script te schrijven.
+    p Watch the performance of this algorithm.
 
     #stats
         div
@@ -27,7 +27,7 @@ block panel
                     span.amount#algorithm-start-funds-usdt(data-value="") 0.00
         div
             span.top-label
-                | Huidige funds - 
+                | Current funds - 
                 span.total#algorithm-current-balance-total
             .balances
                 div
@@ -40,7 +40,7 @@ block panel
     #chart-controls
         div
             input(type="checkbox", class="charts-control-show-line", id="show-total", checked)
-            span.label Totaal
+            span.label Total
         div
             input(type="checkbox", class="charts-control-show-line", id="show-usdt", checked)
             span.label USDT
@@ -61,10 +61,10 @@ block panel
                     .row
                         .cell timestamp
                         .cell order_id
-                        .cell Buy/Sell
+                        .cell buy/sell
                         .cell btc
                         .cell usdt
-                        .cell BTC Prijs
+                        .cell btc_price
                 .table-body
                     each h in history
                         .row(timestamp=h.created_at, class="#{h.action.toLowerCase()}")
@@ -75,6 +75,6 @@ block panel
                             .cell= h.usdt.toFixed(2)
                             .cell= h.btc_price.toFixed(2)
             
-            .button#load-more &plus; Meer laden
+            .button#load-more &plus; Load more
         else
-            p Dit algoritme heeft momenteel nog geen orders gedaan.
+            p This algorithm doesn't have any orders yet.

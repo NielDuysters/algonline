@@ -10,7 +10,7 @@ block head2
 block panel
     h1 Buy/Sell
 
-    p Koop of verkoop BTC. Let op: Dit kan invloed hebben op de beschikbare funds voor je algoritmes.
+    p Buy or sell BTC. Be careful: This can affect the funds available for your algorithms.
 
     #stats
         div
@@ -35,18 +35,18 @@ block panel
     
     form(method="POST", action="/panel/buy-sell")
         .input-wrapper
-            span Koop/Verkoop
+            span Buy/sell
             select(name="action", value="buy")
-                option(value="buy") Koop
-                option(value="sell") Verkoop
+                option(value="buy") Buy
+                option(value="sell") Sell
         
         .input-wrapper
-            span Aantal BTC in USDT
+            span Amount of BTC (in USDT)
             input(type="number", name="amount", step="0.01", placeholder="5.00", value="20.00")
 
         br
         br
-        input(type="submit", value="Order uitvoeren")
+        input(type="submit", value="Execute order")
 
         br
         if error

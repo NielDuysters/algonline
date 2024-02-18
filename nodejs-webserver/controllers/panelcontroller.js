@@ -76,11 +76,11 @@ exports.add_form = [check_auth, asyncHandler(async (req, res, next) => {
    
     const valid = await v.check()
     if (!valid) {
-        return res.render("panel/add-algorithm", { error: "Ongeldige invoer. Zijn alle velden correct ingevuld?", start_funds: await start_funds(req.sessionID) })
+        return res.render("panel/add-algorithm", { error: "Invalid input. Are all fields filled correctly?", start_funds: await start_funds(req.sessionID) })
     }
 
     if (parseFloat(req.body.first_btc_order) > parseFloat(req.body.start_funds)) {
-        return res.render("panel/add-algorithm", { error: "Eerste BTC aankoop kan niet groter zijn dan start funds in USDT.", start_funds: await start_funds(req.sessionID) })
+        return res.render("panel/add-algorithm", { error: "Initial BTC order can't be bigger then amount of initial USDT.", start_funds: await start_funds(req.sessionID) })
     }
 
     // Send request to Rust.
@@ -107,10 +107,10 @@ exports.add_form = [check_auth, asyncHandler(async (req, res, next) => {
         if (response.status == 201) {
             return res.redirect("/panel")
         } else {
-            return res.render("panel/add-algorithm", { error: "Fout bij toevoegen.", start_funds: await start_funds(req.sessionID) })
+            return res.render("panel/add-algorithm", { error: "Error while adding.", start_funds: await start_funds(req.sessionID) })
         }
     } catch (err) {
-        return res.render("panel/add-algorithm", { error: "Fout bij toevoegen.", start_funds: await start_funds(req.sessionID) })
+        return res.render("panel/add-algorithm", { error: "Error while adding.", start_funds: await start_funds(req.sessionID) })
     }
         
 })]
@@ -129,9 +129,9 @@ exports.algorithm_toggle_running = [check_auth, asyncHandler(async (req, res, ne
                 }
             })
 
-        return res.send(response.status)
+        return res.sendStatus(response.status)
     } catch (err) {
-        return res.send(500)
+        return res.sendStatus(500)
     }
         
 })]
@@ -144,7 +144,7 @@ exports.settings = [check_auth, asyncHandler(async (req, res, next) => {
     var q = await client.query(sql, values)
 
     if (q.rows.length == 0) {
-        return res.render("panel/settings", { start_funds: await start_funds(req.sessionID), user: req.session.user, error: "Gebruiker niet gevonden." })
+        return res.render("panel/settings", { start_funds: await start_funds(req.sessionID), user: req.session.user, error: "User not found." })
     }
 
     res.render("panel/settings", { start_funds: await start_funds(req.sessionID), user: req.session.user, api_keys: q.rows[0] })
@@ -169,7 +169,6 @@ async function init_user(session_token) {
 
         return true
     } catch(err) {
-        console.log(err)
         return false
     }
 }
@@ -184,7 +183,7 @@ exports.settings_update_api_keys = [check_auth, asyncHandler(async (req, res, ne
    
     const valid = await v.check()
     if (!valid) {
-        return res.render("panel/settings", { start_funds: await start_funds(req.sessionID), user: req.session.user, api_keys: req.body, error: "Ongeldige invoer." })
+        return res.render("panel/settings", { start_funds: await start_funds(req.sessionID), user: req.session.user, api_keys: req.body, error: "Invalid input." })
     }
 
     var sql = "UPDATE users SET api_key = $1, api_secret = $2 WHERE id = $3"
@@ -193,7 +192,7 @@ exports.settings_update_api_keys = [check_auth, asyncHandler(async (req, res, ne
     
     await init_user(req.sessionID)
         
-    return res.render("panel/settings", { start_funds: await start_funds(req.sessionID), user: req.session.user, api_keys: req.body, msg: "API Keys zijn geupdate." })
+    return res.render("panel/settings", { start_funds: await start_funds(req.sessionID), user: req.session.user, api_keys: req.body, msg: "API Keys updated." })
 
 })]
 
@@ -214,10 +213,10 @@ exports.reset_user = [check_auth, asyncHandler(async (req, res, next) => {
         if (response.status == 200) {
             return res.redirect("/panel")
         } else {
-            return res.render("panel/settings", { error: "Fout bij resetten.", start_funds: await start_funds(req.sessionID), user: req.session.user })
+            return res.render("panel/settings", { error: "Error while resetting.", start_funds: await start_funds(req.sessionID), user: req.session.user })
         }
     } catch (err) {
-        return res.render("panel/settings", { error: "Fout bij resetten.", start_funds: await start_funds(req.sessionID), user: req.session.user })
+        return res.render("panel/settings", { error: "Error while resetting.", start_funds: await start_funds(req.sessionID), user: req.session.user })
     }
 })]
 
@@ -236,7 +235,7 @@ exports.algorithm_stats = [check_auth, asyncHandler(async (req, res, next) => {
 
         res.render("panel/algorithm-stats", { start_funds: await start_funds(req.sessionID), history: history.data, id: req.params.id, moment: moment, user: req.session.user })
     } catch (err) {
-        return res.send(500)
+        return res.sendStatus(500)
     }
 })]
 
@@ -256,9 +255,9 @@ async function get_algorithm_code(req) {
             return response.data
         }
 
-        return "Fout bij ophalen code."
+        return "Error retrieving code."
     } catch(err) {
-        return "Fout bij ophalen code."
+        return "Error retrieving code."
     }
 }
 
@@ -299,7 +298,7 @@ exports.buy_sell_order = [check_auth, asyncHandler(async (req, res, next) => {
    
     const valid = await v.check()
     if (!valid) {
-        return res.render("panel/buy-sell", { start_funds: await start_funds(req.sessionID), user: req.session.user, error: "Ongeldige invoer." })
+        return res.render("panel/buy-sell", { start_funds: await start_funds(req.sessionID), user: req.session.user, error: "Invalid input." })
     }
 
     try {
@@ -317,12 +316,12 @@ exports.buy_sell_order = [check_auth, asyncHandler(async (req, res, next) => {
             })
 
         if (response.status == 200) {
-            return res.render("panel/buy-sell", { start_funds: await start_funds(req.sessionID), user: req.session.user, msg: "Order is uitgevoerd." })
+            return res.render("panel/buy-sell", { start_funds: await start_funds(req.sessionID), user: req.session.user, msg: "Order executed." })
         } else {
             return res.render("panel/buy-sell", { start_funds: await start_funds(req.sessionID), user: req.session.user, error: response.data })
         }
     } catch(err) {
-        return res.render("panel/buy-sell", { start_funds: await start_funds(req.sessionID), user: req.session.user, error: "Onbekende fout: " + err })
+        return res.render("panel/buy-sell", { start_funds: await start_funds(req.sessionID), user: req.session.user, error: "Unknown error: " + err })
     }
     
 })]
@@ -342,10 +341,10 @@ exports.btc_klines = [check_auth, asyncHandler(async (req, res, next) => {
         if (response.status == 200) {
             return res.send(response.data)
         } else {
-            return res.send(response.status)
+            return res.sendStatus(response.status)
         }
     } catch(err) {
-        res.status(500).send("BTC candlesticks konden niet opgehaald worden.")
+        res.status(500).send("Could not retrieve BTC candlesticks.")
     }
 })]
 
@@ -361,9 +360,9 @@ exports.ping = [check_auth, asyncHandler(async (req, res, next) => {
                 }
             })
 
-        return res.send(response.status)
+        return res.sendStatus(response.status)
     } catch (err) {
-        return res.send(500)
+        return res.sendStatus(500)
     }
 })]
 
@@ -379,8 +378,8 @@ exports.ping_exchange = [check_auth, asyncHandler(async (req, res, next) => {
                 }
             })
 
-        return res.send(response.status)
+        return res.sendStatus(response.status)
     } catch (err) {
-        return res.send(500)
+        return res.sendStatus(500)
     }
 })]

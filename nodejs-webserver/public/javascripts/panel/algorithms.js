@@ -40,7 +40,7 @@ function show_algorithm_data() {
                 if (response.is_running == true) {
                     // Set power-button text to "is-running". We check if the HTML of the cell is already equal
                     // to the HTML we want to update it to avoid blinking DOM.
-                    let html = "<img src=\"/images/panel/turn-off.png\" title=\"Stop algoritme\" onclick=\"toggle_running('"+id+"', 'stop')\"><span color=\"#088A08\">Running...</span>"
+                    let html = "<img src=\"/images/panel/turn-off.png\" title=\"Stop algorithm\" onclick=\"toggle_running('"+id+"', 'stop')\"><span color=\"#088A08\">Running...</span>"
                     if (ircell.innerHTML.replaceAll("&quot;", "\"") != html) {
                         ircell.innerHTML = html
                     }
@@ -51,7 +51,7 @@ function show_algorithm_data() {
                 } else {
                     // Set power-button text to "inactief". We check if the HTML of the cell is already equal
                     // to the HTML we want to update it to avoid blinking DOM.
-                    let html = "<img src=\"/images/panel/turn-on.png\" title=\"Start algoritme\" onclick=\"toggle_running('"+id+"', 'start')\"><span color=\"#6E6E6E\">Inactief.</span>"
+                    let html = "<img src=\"/images/panel/turn-on.png\" title=\"Start algorithm\" onclick=\"toggle_running('"+id+"', 'start')\"><span color=\"#6E6E6E\">Inactive.</span>"
                     if (ircell.innerHTML.replaceAll("&quot;", "\"") != html) {
                         ircell.innerHTML = html
                     }
@@ -78,7 +78,7 @@ function toggle_running(id, start_or_run) {
     xhr.onreadystatechange = function() {
         if (xhr.readyState == XMLHttpRequest.DONE) {
             if (xhr.status != 200) {
-                alert("Fout bij veranderen van running status...")
+                alert("Error while updating running status.")
             }
         }
     }
@@ -90,7 +90,7 @@ function toggle_running(id, start_or_run) {
 // Function executed when the user clicks the button to delete an algorithm.
 function delete_algorithm(id) {
     // Check if user is sure.
-    if (!confirm("Ben je zeker dat je dit algoritme permament wilt verwijderen?")) {
+    if (!confirm("Are you sure you want to permamently delete this algorithm?")) {
         return;
     }
 
@@ -100,7 +100,7 @@ function delete_algorithm(id) {
         if (xhr.readyState == XMLHttpRequest.DONE) {
             if (xhr.status == 204) {
                 document.querySelectorAll(".row#" + id)[0].remove()
-                alert("Algoritme is verwijderd.")
+                alert("Algorithm is removed.")
 
                 if (document.querySelectorAll(".table .table-body .row").length == 0) {
                     window.location.reload()
@@ -118,7 +118,7 @@ function delete_algorithm(id) {
 // Function executed when the user clicks the button to reset an algorithm.
 function reset_algorithm(id) {
     // Check if user is sure.
-    if (!confirm("Ben je zeker dat je de order-history en start_funds van dit algoritme permament wilt resetten?")) {
+    if (!confirm("Are you sure you want to reset the start funds and permamently delete the order-history of this algorithm?")) {
         return;
     }
     
@@ -127,7 +127,7 @@ function reset_algorithm(id) {
     xhr.onreadystatechange = function() {
         if (xhr.readyState == XMLHttpRequest.DONE) {
             if (xhr.status == 204) {
-                alert("Algoritme is gereset.")
+                alert("Algorithm resetted.")
             } else {
                 alert(xhr.responseText)
             }

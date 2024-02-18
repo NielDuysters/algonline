@@ -147,6 +147,11 @@ function insert_start_data() {
                     chart.options.axisX.intervalType = "hour"
                     chart.options.axisX.valueFormatString = "HH:00"
                     break
+                case "1d":
+                    chart.options.axisX.interval = 1
+                    chart.options.axisX.intervalType = "day"
+                    chart.options.axisX.valueFormatString = "MM/DD"
+                    break
                 default:
                     chart.options.axisX.interval = 1
                     chart.options.axisX.intervalType = "second"

@@ -7,20 +7,20 @@ block head2
     script(src="/javascripts/panel/algorithms.js", defer)
 
 block panel
-    h1 Algoritmes
+    h1 Algorithms
 
-    p Bekijk hier de prestatie van jouw trading algoritmes. Je kan ook je eigen algoritmes toevoegen door een Python script te schrijven.
+    p An overview of your current algorithms.
 
 
     a(class="button", href="/panel/algorithms/add")
-        span &plus; Toevoegen
+        span &plus; Add
 
     if algorithms.length > 0
         .table
             .table-head
                 .row
                     .cell id
-                    .cell omschrijving
+                    .cell description
                     .cell start_funds (USDT)
                     .cell current_funds (USDT)
                     .cell start/stop
@@ -28,8 +28,8 @@ block panel
                     .cell details
                     .cell
                         | reset
-                        img(src="/images/panel/help.png", class="text-popup-button", data-text="Zet huidige funds als start-funds en verwijder geschiedenis.")
-                    .cell verwijder
+                        img(src="/images/panel/help.png", class="text-popup-button", data-text="Set current funds as start funds and delete order history.")
+                    .cell delete
             .table-body
                 each a in algorithms
                     .row(id="#{a.id}")
@@ -39,17 +39,17 @@ block panel
                         .cell= a.start_funds
                         .cell(class="current-funds") 0.00
                         .cell(class="is-running")
-                            img(src="/images/panel/turn-off.png", title="Stop algoritme.")
-                            span Inactief
+                            img(src="/images/panel/turn-off.png", title="Stop algorithm.")
+                            span Inactive
                         .cell
                             a(href="/panel/algorithms/#{a.id}/stats")
-                                img(src="/images/panel/stats.png", title="Statistieken algoritme.")
+                                img(src="/images/panel/stats.png", title="Statistics of algorithm.")
                         .cell
                             a(href="/panel/algorithms/#{a.id}/details")
-                                img(src="/images/panel/info.png", title="Details algoritme.")
+                                img(src="/images/panel/info.png", title="Details algorithm.")
                         .cell
-                            img(src="/images/panel/reset.png", title="Reset algoritme.", class="reset-button", onclick="reset_algorithm(\'#{a.id}\')")
+                            img(src="/images/panel/reset.png", title="Reset algorithm.", class="reset-button", onclick="reset_algorithm(\'#{a.id}\')")
                         .cell
-                            img(src="/images/panel/delete.png", title="Verwijder algoritme.", class="delete-button", onclick="delete_algorithm(\'#{a.id}\')")
+                            img(src="/images/panel/delete.png", title="Delete algorithm.", class="delete-button", onclick="delete_algorithm(\'#{a.id}\')")
     else
-        p U heeft momenteel nog geen algoritmes.
+        p You currently don't have any algorithms.

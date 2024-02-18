@@ -10,11 +10,11 @@ block content
     nav(id="panel-nav")
         ul
             li
-                a(href="/panel/algorithms") Algoritmes
+                a(href="/panel/algorithms") Algorithms
             li
                 a(href="/panel/buy-sell") Buy/Sell
             li
-                a(href="/panel/settings") Instellingen
+                a(href="/panel/settings") Settings
 
         div
             .panel-block#system-status
@@ -40,7 +40,7 @@ block content
                             span.amount#start-funds-usdt(data-value="#{start_funds['usdt']}") #{start_funds["usdt"].toFixed(2)}
                 div
                     span.top-label
-                        | Huidige funds - 
+                        | Current funds - 
                         span.total#current-balance-total
                     .balances
                         div

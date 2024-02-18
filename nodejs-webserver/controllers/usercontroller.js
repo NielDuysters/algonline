@@ -9,7 +9,7 @@ const axios = require('axios')
 // Check if user is authenticated when retrieving user-data.
 const check_auth = (req, res, next) => {
     if (!req.session.user) {
-        return res.send(401)
+        return res.sendStatus(401)
     }
 
     next()
@@ -24,7 +24,7 @@ exports.login = asyncHandler(async (req, res, next) => {
 
     // Check if user is found.
     if (q.rows.length == 0) {
-        return res.render("index", { error: "Geen gebruiker gevonden." })
+        return res.render("index", { error: "User not found." })
     }
 
     // Verify password hash.
@@ -32,7 +32,7 @@ exports.login = asyncHandler(async (req, res, next) => {
     const ok = await bcrypt.compare(req.body.password, phash)
 
     if (!ok) {
-        return res.render("index", { error: "Fout wachtwoord." })
+        return res.render("index", { error: "Wrong credentials." })
     }
 
     // Save user in session.
@@ -61,7 +61,7 @@ exports.login_form = asyncHandler(async (req, res, next) => {
 
     const valid = await v.check()
     if (!valid) {
-        return res.render("index", { title: "Express", error: "Ongeldige invoer." })
+        return res.render("index", { title: "Express", error: "Invalid input." })
     }
 
     // Check if action is login or register.
@@ -84,7 +84,7 @@ exports.register = asyncHandler(async (req, res, next) => {
     var q = await client.query(sql, values)
     
     if (q.rows.length > 0) {
-        return res.render("index", { error: "Gebruiker bestaat al." })
+        return res.render("index", { error: "User already exists." })
     }
 
 
@@ -97,7 +97,7 @@ exports.register = asyncHandler(async (req, res, next) => {
     var q = await client.query(sql, values)
 
     if (q.rows.length == 0) {
-        return res.render("index", { error: "Onverwachte fout." })
+        return res.render("index", { error: "Unexpected error." })
     }
     
     // Save user in session.
@@ -131,8 +131,8 @@ exports.balance = [check_auth, asyncHandler(async (req, res, next) => {
             return res.status(200).send(response.data)
         }
 
-        return res.send(response.status)
+        return res.sendStatus(response.status)
     } catch(err) {
-        res.status(500).send("Onbekende fout opgetreden.")
+        res.status(500).send("Unknown error occurred.")
     }
 })]

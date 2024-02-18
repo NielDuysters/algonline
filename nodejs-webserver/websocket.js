@@ -3,9 +3,8 @@ const session = require('express-session')
 const { parse } = require('url')
 
 function handle_websocket(server, sessionMiddleware) {
-
+    
     const wss = new WebSocketServer({ noServer: true })
-
     server.on('upgrade', function upgrade(request, socket, head) {
         sessionMiddleware(request, {}, () => {
             

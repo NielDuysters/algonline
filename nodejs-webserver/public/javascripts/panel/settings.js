@@ -1,6 +1,6 @@
 // Executed when the user clicks the button to reset his account.
 document.getElementById("reset-button").addEventListener("click", function() {
-    if (confirm("Bent u zeker dat je jouw account wilt resetten? Dit kan niet meer ongedaan gemaakt worden!")) {
+    if (confirm("Are you sure you want to reset your account? This can't be undone!")) {
         window.location.href = "/panel/settings/reset"
     }
 })

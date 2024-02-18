@@ -82,15 +82,10 @@ async fn main() -> Result<(), Error> {
             loop {
                 let mut buffer = [0; 1024];
                 match stream.read(&mut buffer).await {
-                    Ok(0) => break,
+                    Ok(0) => {
+                        break;
+                    },
                     Ok(n) => {
-                        // Data structure we are sending back.
-                        /*
-                        #[derive(Serialize)]
-                        struct Data {
-                            result: f64,
-                            last_candlestick: CandleStick,
-                        }*/
                         
                         // kline received from UnixSocket.
                         let received_data = String::from_utf8_lossy(&buffer[..n]);

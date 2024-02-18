@@ -19,5 +19,5 @@ pub static WEBSOCKET_API_URL: LazyOnceCell<String> = LazyOnceCell::new(|| "wss:/
 pub static WEBSOCKET_STREAM_URL: LazyOnceCell<String> = LazyOnceCell::new(|| "wss://stream.binance.com:443/ws".to_string());
 
 // Hash of PyExecutor binary.
-pub static PY_EXECUTOR_HASH: LazyOnceCell<String> = LazyOnceCell::new(|| "a5f60233e08d7669f8f1765142ca21d8dfa7ac30a94dc5046ecb7ea0a271bc52".to_string());
+pub static PY_EXECUTOR_HASH: LazyOnceCell<String> = LazyOnceCell::new(|| "6aa40ae8607c55c46d7acae93141821b12f29925e022940f38d75d37ac2c4b42".to_string());
 

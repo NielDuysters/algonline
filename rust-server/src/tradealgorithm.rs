@@ -254,7 +254,7 @@ impl TradeAlgorithm {
 
         // Check if hash of PyExecutor binary matches predefined SHA256 hash.
         if pyexecutor_sha256 != config::PY_EXECUTOR_HASH.as_str() {
-           // return Err(tradealgorithm::Error::AlgorithmError("PythonExecutor hash does not match.".into())); 
+            return Err(tradealgorithm::Error::AlgorithmError("PythonExecutor hash does not match.".into())); 
         }
 
         // Create a new process to execute algorithm.
@@ -328,28 +328,13 @@ impl TradeAlgorithm {
         // Thread to read result from PyExecutor.
         let thread_process_websocket_data = tokio::spawn(async move {
             loop {
+
                 let mut buffer = [0; 1024];
                 match rx.read(&mut buffer).await {
                     Ok(0) => {
                         break;
                     },
                     Ok(n) => {
-                        
-                        // Data structure we expect receive.
-                        /*
-                        #[derive(Deserialize)]
-                        struct Data {
-                            result: f64,
-                            last_candlestick: CandleStick,
-                        }*/
-                        /*
-                        let received_data = String::from_utf8_lossy(&buffer[..n]);
-                        let data : Data = match serde_json::from_str(&received_data.to_string()) {
-                            Ok(d) => d,
-                            Err(_) => {
-                                continue;
-                            }
-                        };*/
 
                         let received_result = match String::from_utf8_lossy(&buffer[..n]).parse::<f64>() {
                             Ok(r) => r,
@@ -357,6 +342,7 @@ impl TradeAlgorithm {
                                 panic!("Could not parse result to f64.");
                             }
                         };
+
 
                         // Process result and execute order if necessary.
                         match self.process(psql.clone(), received_result, current_btc_price.clone(), api.clone(), ws_send.clone()).await {

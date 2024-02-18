@@ -5,18 +5,18 @@ block head2
     script(src="/javascripts/panel/settings.js", defer)
 
 block panel
-    h1 Instellingen
+    h1 Settings
 
-    p Hier kan je jouw account resetten of je API-keys wijzigen.
+    p Reset your account or edit API-keys.
 
     #settings-container
         .input-wrapper
             span
                 | Reset account
-                img(src="/images/panel/help.png", class="text-popup-button", data-text="Reset jouw start balance en verwijder alle algoritmes.")
+                img(src="/images/panel/help.png", class="text-popup-button", data-text="Reset your start balance and remove all algorithms.")
             #reset-button
                 img(src="/images/panel/reset.png")
-                | Reset nu
+                | Reset now
         
         if error
             span #{error}
@@ -24,7 +24,7 @@ block panel
     form(method="POST", action="/panel/settings/keys")
         span.form-title
             | API Keys
-            span.warning Gebruik enkel test API-keys!
+            span.warning Only use test API-keys.
 
 
         .input-wrapper
@@ -36,7 +36,7 @@ block panel
                 | API Secret
             input(type="text", name="api_secret", placeholder="secret123", value="#{api_keys.api_secret}")
         
-        input(type="submit", value="Wijzigen")
+        input(type="submit", value="Update")
 
         br
         br
