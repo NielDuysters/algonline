@@ -4,7 +4,7 @@ This project is deployed on a Debian GNU/Linux VPS. I will not explain the basic
 
 I will explain the configuration I have used to solve a potential security threat.
 
-**Security threat:** The user is able to upload custom Python scripts which will be executed on our server. This contains the risk that a user with mal intent uploads a vicious script trying to read/modify files on our server or upload a script using an unnormal amount of system resources trying to take down the server with a DoS-attack.
+**Security threat:** The user is able to upload custom Python scripts which will be executed on our server. This contains the risk that an user with mal intent uploads a vicious script trying to read/modify files on our server or upload a script using an unnormal amount of system resources trying to take down the server with a DoS-attack.
 
 On code-level we partly migitated this risk by filtering the uploaded code on blacklisted keyworks like "import", "eval", "os", "file",... The code should only be able to do calculations on the provided data and should not have access to the network or unpermitted files on the server. Besides blacklisting on code-level we of course also want to implement security protocol on OS-level.
 
