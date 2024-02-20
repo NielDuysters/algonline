@@ -20,6 +20,10 @@ The code base exists mainly out of Rust, a big part is also written in NodeJS. B
 
 For each section of the project a folder exists in this repository where I explain the details.
 
+## Demovideo
+I made a video demonstrating the project and explaining the code. The video has a duration of 24 minutes, use the timestamps below to jump to your area of interest.
+[<img src="screenshots/play-video-button.png">](https://youtu.be/gX2NasubZk8?si=5J46kM8bQCJtk2aa)
+
 ## Screenshots
 Algorithm overview
 ![Algorithm overview](screenshots/algorithm-overview.png)
