@@ -4,7 +4,6 @@ pub struct RouteHandler;
 impl RouteHandler{
     // Find fn pointer to execute the route given the Http-method and path from the incoming
     // request.
-    // We pass the TcpStream in case a WebSocket-endpoint is called.
     pub async fn goto(req: &mut http::Http, psql: Psql, api: Api) -> Result<http::HttpResponse, http::Error> {
 
         if req.method == "OPTIONS" {

@@ -93,7 +93,7 @@ macro_rules! json_str_to_f64 {
     }
 }
 
-
+// Define your routes here...
 lazy_static! {
     pub static ref ROUTES : std::vec::Vec<Route> = vec![
         route!("GET", "/ping", Routes::ping),

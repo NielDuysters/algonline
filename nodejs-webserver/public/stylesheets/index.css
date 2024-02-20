@@ -20,8 +20,34 @@
 #text {
     font-size: 1.3em;
 }
+
 #text h1 {
     color: #3686F4;
+}
+
+#text span#slogan {
+    font-weight: 600;
+}
+
+#text #buttons {
+    margin-top: 25px;
+}
+
+#text #buttons a {
+    display: flex;
+    flex-direction: row;
+    font-size: 0.85em;
+    align-items: center;
+    color: #FFFFFF;
+    text-decoration: none;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+#text #buttons a:hover { text-decoration: underline; }
+
+#text #buttons a img {
+    width: 32px;
 }
 
 form,

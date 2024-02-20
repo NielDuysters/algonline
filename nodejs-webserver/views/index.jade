@@ -7,33 +7,42 @@ block content
     #container
         #text
             div
-                h1 Welkom bij Cryptxonline
-                p Dit is een demo-project voor mijn sollicitatie om o.a de volgende vaardigheden aan te tonen: Rust, Node.js, Python, SQL, alles omtrent web (HTTP, Cookies, Cache,...), API's, sockets, Unix, en deployment. Maar vooral mijn mogelijkheid om met mijn programmeervaardigheden snel en flexibel toe te passen op nieuw en onbekend terrein.
+                h1 Welcome to Algonline
+                span#slogan Discover the potential of your algorithms online.
+                p This is a demo-project for my job application showcasing my skills in Rust, NodeJS, Python, Unix, SQL, communicating with APIs, multi-threading, asynchronous programming and more.
 
-                p Hoe werkt Cryptxonline? Simpel!
+                p How does it work? Easy!
                     ul
-                        li Registreer een account of login met niel:pass123.
-                        li Bekijk een Bitcoin-chart die we halen uit de API van Binance of Kraken.
-                        li Stel een testbedrag in. Hiermee kan je Bitcoin aankopen en verkopen en de evolutie van deze trade opvolgen.
-                        li Upload een Python-trading algorithme en volg de prestatie op.
+                        li Register an account.
+                        li Upload and configure your own trading algorithms in Python.
+                        li Track the performance of your algorithms.
+
+                div#buttons
+                    a(href="https://github.com/NielDuysters/algonline", target="_blank")
+                        img(src="/images/github.png", alt="Github")
+                        span View the code on Github.
+                    a(href="#")
+                        img(src="/images/youtube.png", alt="Youtube")
+                        span Watch the demo-video on Youtube.
+
         #form-container
             if !user
                 form(action="/login", method="POST")
                     span(class="title") Login
                     .input-wrapper
                         img(src="/images/profile.png", alt="")
-                        input(type="text", name="username", placeholder="Gebruikersnaam", minlength="3", required)
+                        input(type="text", name="username", placeholder="Username", minlength="3", required)
                     .input-wrapper
                         img(src="/images/password.png", alt="")
-                        input(type="password", name="password", placeholder="Wachtwoord", minlength="5", required)
+                        input(type="password", name="password", placeholder="Password", minlength="5", required)
                     #form-buttons
-                        input(type="submit", name="login", value="Inloggen")
-                        input(type="submit", name="register", value="Of registreer", id="registerbtn")
+                        input(type="submit", name="login", value="Login")
+                        input(type="submit", name="register", value="Or register", id="registerbtn")
 
                     if error
                         .form-error
                             span #{error}
             else
                 #welcome
-                    span(class="title") Welkom #{user.username}
-                    a(href="/panel", class="button") Ga naar paneel.
+                    span(class="title") Welcome #{user.username}
+                    a(href="/panel", class="button") Go to panel.
