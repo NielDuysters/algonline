@@ -248,7 +248,7 @@ impl TradeAlgorithm {
 
 
         // Check if PyExecutor binary is legit.
-        let pyexecutor_path = "target/debug/python-executor";
+        let pyexecutor_path = "./python-executor";
         let pyexecutor_bytes = std::fs::read(pyexecutor_path).unwrap();
         let pyexecutor_sha256 = sha256::digest(&pyexecutor_bytes);
 

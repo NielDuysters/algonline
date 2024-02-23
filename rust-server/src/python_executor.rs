@@ -237,6 +237,9 @@ fn arbitrary_code_is_secure(code: &String) -> bool {
         "urllib",
         "sys",
         "traceback",
+        "system",
+        "locals",
+        "vars",
         "__",
     ];
 

@@ -298,7 +298,7 @@ function add_datapoint_to_chart(data) {
                 y: parseFloat(data.usdt),
             }) 
             
-            update_funds_stats("usdt", parseFloat(data.total))
+            update_funds_stats("usdt", parseFloat(data.usdt))
         }
         
         if (d.name.toLowerCase() == "btc") {
