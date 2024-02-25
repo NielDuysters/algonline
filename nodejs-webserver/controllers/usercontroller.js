@@ -2,18 +2,10 @@
 
 const asyncHandler = require("express-async-handler")
 const { Validator } = require('node-input-validator')
+const check_auth = require("../check_auth.js")
 const User = require("../models/user")
 const bcrypt = require("bcrypt")
 const axios = require('axios')
-
-// Check if user is authenticated when retrieving user-data.
-const check_auth = (req, res, next) => {
-    if (!req.session.user) {
-        return res.sendStatus(401)
-    }
-
-    next()
-}
 
 // Function handling login. Called from exports.login_form.
 exports.login = asyncHandler(async (req, res, next) => {

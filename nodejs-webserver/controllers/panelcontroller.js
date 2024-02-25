@@ -2,6 +2,7 @@
 
 const asyncHandler = require("express-async-handler")
 const { Validator } = require('node-input-validator')
+const check_auth = require("../check_auth.js")
 const bcrypt = require("bcrypt")
 const moment = require('moment')
 const WebSocket = require('ws')
@@ -10,15 +11,6 @@ const he = require('he')
 
 const Algorithm = require("../models/algorithm")
 const User = require("../models/user")
-
-// Check if user is authenticated.
-const check_auth = (req, res, next) => {
-    if (!req.session.user) {
-        return res.redirect("/")
-    }
-
-    next()
-}
 
 // Function to get the start_funds of the user. Required to display
 // in the panel and to calculate profit/loss.

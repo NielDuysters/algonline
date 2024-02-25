@@ -4,16 +4,8 @@
 const asyncHandler = require("express-async-handler")
 const { Validator } = require('node-input-validator')
 const Algorithm = require("../models/algorithm")
+const check_auth = require("../check_auth.js")
 const axios = require('axios')
-
-// Check if user is authenticated.
-const check_auth = (req, res, next) => {
-    if (!req.session.user) {
-        return res.sendStatus(401)
-    }
-
-    next()
-}
 
 // Get all algorithms.
 exports.retrieve = [check_auth, asyncHandler(async (req, res, next) => {
@@ -33,7 +25,7 @@ exports.retrieve = [check_auth, asyncHandler(async (req, res, next) => {
 
         return res.sendStatus(response.status)
     } catch(err) {
-        res.status(500).send("Onbekende fout opgetreden.")
+        res.status(500).send("Unknown error occurred.")
     }
 })]
 

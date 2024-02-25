@@ -191,7 +191,19 @@ function websocket_connection() {
 
     ws = new WebSocket("ws://127.0.0.1:3001/algorithm-stats?id=" + id)
 
+    // Send heartbeat.
+    ws.onopen = () => {
+        setInterval(() => {
+            ws.send("ping");
+        }, 10000);
+    }
+
+    // Received data
     ws.onmessage = (event) => {
+        if (event.data == "pong") {
+            return
+        }
+
         let json = JSON.parse(event.data)
 
         if (json.response_type == "HistoryRow") {

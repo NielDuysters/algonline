@@ -34,13 +34,13 @@ function handle_websocket(server, sessionMiddleware) {
                 default:
                     socket.destroy()
             }
-        });
-    });
+        })
+    })
 }
 
 function btc_candlestick(ws, session_token, interval) {
-    const api_ws = new WebSocket('ws://127.0.0.1:8081');
-    api_ws.on('error', console.error);
+    const api_ws = new WebSocket('ws://127.0.0.1:8081')
+    api_ws.on('error', console.error)
 
     if (interval == null) {
         interval = "1s"
@@ -61,17 +61,17 @@ function btc_candlestick(ws, session_token, interval) {
 
     api_ws.on('message', (data) => {
         ws.send(data.toString())
-    });
+    })
     
     ws.on('close', () => {
         //api_ws.close()
-    });
+    })
 
 }
 
 function algorithm_stats(ws, session_token, id) {
-    const api_ws = new WebSocket('ws://127.0.0.1:8081');
-    api_ws.on('error', console.error);
+    const api_ws = new WebSocket('ws://127.0.0.1:8081')
+    api_ws.on('error', console.error)
 
     api_ws.on('open', () => {
         const request = {
@@ -88,11 +88,18 @@ function algorithm_stats(ws, session_token, id) {
 
     api_ws.on('message', (data) => {
         ws.send(data.toString())
-    });
-    
+    })
+   
+    // Heartbeat.
+    ws.on('message', (msg) => {
+        if (msg == "ping") {
+            ws.send("pong")
+        }
+    })
+
     ws.on('close', () => {
        // api_ws.close()
-    });
+    })
 }
 
 module.exports = handle_websocket
