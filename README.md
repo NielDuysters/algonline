@@ -20,7 +20,7 @@ The code-base exists mainly out of Rust, a big part is also written in NodeJS. B
 - Use of APIs (BinanceAPI, signed requests, REST, Websocket,...).
 - ...
 
-For each section of the project a folder exists in this repository where I explain the details.
+For each component of the project a folder exists in this repository where I explain the details.
 
 ## Demovideo
 I made a video demonstrating the project and explaining the code. The video has a duration of 24 minutes, use the timestamps below to jump to your area of interest.
