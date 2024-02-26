@@ -8,7 +8,7 @@ The code-base exists mainly out of Rust, a big part is also written in NodeJS. B
 **Used skills (i.a):**
 - Rust.
 - NodeJS.
-- SQL.
+- SQL (PostgreSQL).
 - Python.
 - Unix.
 - Low-level understanding of HTTP-protocol.
