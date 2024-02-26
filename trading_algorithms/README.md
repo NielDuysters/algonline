@@ -4,7 +4,7 @@ I honestly do not have any professional experience with trading or finance, yet.
 
 What I do possess however is a huge interest in everything evolving economics, the markets and entrepreneurship. This is reflected by e.g the books I read: I for example study the work of iconic economists like The Wealth of Nations from Adam Smith, love to watch podcasts/video's about the market and have shown some entrepreneurial initiatives.
 
-In addition I also have the idea that I do have a feeling for understanding the underlying principles of markets and econimics which will allow me to learn fast in this field.
+In addition I also have the idea that I do have a feeling for understanding the underlying principles of markets and economics which will allow me to learn fast in this field.
 
 Currently I am also compiling a small document containing a resume of the educational material I gather from Investopedia.com about trading, the Binance API about crypto trading specifically and the type of orders, and last but not least the articles on Keyrock's blog, in an attempt to widen my knowledge about the basics of this matter.
 
