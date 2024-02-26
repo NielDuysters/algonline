@@ -10,6 +10,11 @@ router.get('/', function(req, res, next) {
   res.render('index', { user: req.session.user })
 })
 
+router.get('/unauthenticated', function(req, res, next) {
+    req.session.destroy()
+    res.send("Your session expired. Please authenticate again.")
+})
+
 // User.
 router.post("/login", usercontroller.login_form)
 router.get("/user/balance", usercontroller.balance)

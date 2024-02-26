@@ -16,8 +16,7 @@ const check_auth = async (req, res, next) => {
     }
 
     if (q.rows[0].session_token != req.sessionID) {
-        req.session.destroy()
-        return res.status(401).send("Your session expired. Please authenticate again.")
+        return res.redirect('/unauthenticated')
     }
 
     next()
