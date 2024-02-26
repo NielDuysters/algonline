@@ -1,6 +1,6 @@
 # PostgreSQL
 
-PostgreSQL is the database-engine of choice for this project. No advanced things are used in the database-architecture and the database-part of the project is pretty basic.
+PostgreSQL is the database-engine of choice for this project. No advanced things are used in the database-architecture and the database-part of the project is pretty basic. You can inspect the database-structure here: ([database-structure](database-structure.png))
 
 I will go into more detail about how I optimized the way chart-data for a trading algorithm is queried.
 
