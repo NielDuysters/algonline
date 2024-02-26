@@ -1,7 +1,7 @@
 // Check if user is authenticated.
 const check_auth = async (req, res, next) => {
     if (!req.session.user) {
-        return res.sendStatus(401)
+        return res.redirect('/unauthenticated')
     }
 
 
