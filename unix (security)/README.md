@@ -8,7 +8,7 @@ I will explain the configuration I have used to solve a potential security threa
 
 On code-level we partly migitated this risk by filtering the uploaded code on blacklisted keyworks like "import", "eval", "os", "file",... The code should only be able to do calculations on the provided data and should not have access to the network or unpermitted files on the server. Besides blacklisting on code-level we of course also want to implement security protocols on OS-level.
 
-**Solution:** We use cgroups and AppArmor for the PyExecutor. Note that all the Python code is executed in a separate binary/process then our Rust-server. 
+**Solution:** We use cgroups and AppArmor for the PyExecutor. Note that all the Python code is executed in a binary/process separated from our Rust-server. 
 
 ## AppArmor
 For AppArmor we make a profile in `/etc/apparmor.d` to restrict access to the network and all files except those who are required.
