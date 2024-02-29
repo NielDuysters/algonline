@@ -1,5 +1,5 @@
 # Algonline - Demo
-[Algonline.be](https://algonline.be) is a platform where users can upload their own custom trading algorithms for BTC/USDT as a Python-script and track the performance of each algorithm. This project serves as demo for my job application.
+Algonline is a platform where users can upload their own custom trading algorithms for BTC/USDT as a Python-script and track the performance of each algorithm. This project serves as demo for my job application.
 
 **Summary - The user interacts with the platform written mainly in Rust through a web-application programmed in NodeJS. He can upload trading algorithms scripted in Python to trade BTC/USDT. We retrieve the market-data from the Binance REST- and websocket-API. Through inter-process communication the retrieved data is fed to a separate process interpreting the Python-script using PyO3 and executing it in Rust. The Python-script returns an order-signal to buy or sell, this order is executed using the Binance websocket-API. The user can track the performance of an algorithm by viewing the funds of this algorithm in a chart which is live-updated using websockets. This results in a user-friendly platform where different trading algorithms can be tested with low-latency.**
 
