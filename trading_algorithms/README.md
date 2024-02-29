@@ -6,7 +6,7 @@ What I do possess however is a huge interest in everything evolving economics, t
 
 In addition I also have the idea that I do have a feeling for understanding the underlying principles of markets and economics which will allow me to learn fast in this field.
 
-Currently I am also compiling a small document containing a resume of the educational material I gather from Investopedia.com about trading, the Binance API about crypto trading specifically and the type of orders, and last but not least the articles on Keyrock's blog, in an attempt to widen my knowledge about the basics of this matter.
+Currently I am also compiling a small document containing a resume of the educational material I gather from Investopedia.com about trading, the Binance API about crypto trading specifically and the type of orders in an attempt to widen my knowledge about the basics of this matter.
 
 For now I have already implemented some basic trading algorithms on the platform. These algorithms are currently yielding a positive result but of course that is no indication of their success because of the short time span. I also want to clarify that I am not necessarily applying for the position to develop the math behind new trading algorithms but for the position to support the implementation of these.
 
